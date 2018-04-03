@@ -34,12 +34,21 @@ public class AirBdbRepository {
 	}
 
 	/**
+	 * Actualiza un objeto persistente en la base de datos
+	 * @param object el objecto a actualizar
+	 */
+	public <T> void update(T object) {
+		Session sess = sessionFactory.getCurrentSession();
+		sess.merge(object);
+	}
+
+	/**
 	 * Obtiene un usuario por su username (email)
 	 * @param email email del usuario a buscar
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
 	public User getUserByUsername(String email) {
-		return (User) sessionFactory.openSession().createCriteria(User.class)
+		return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
 				.add(Restrictions.eq("username", email))
 				.list()
 				.get(0);
@@ -54,7 +63,7 @@ public class AirBdbRepository {
 		User user;
 
 		try {
-			user = this.sessionFactory.openSession().find(User.class, id);
+			user = this.sessionFactory.getCurrentSession().find(User.class, id);
 		} catch (IllegalArgumentException ex) {
 			user = null;
 		}
@@ -68,9 +77,26 @@ public class AirBdbRepository {
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
 	public Property getPropertyByName(String name) {
-		return (Property) sessionFactory.openSession().createCriteria(Property.class)
+		return (Property) sessionFactory.getCurrentSession().createCriteria(Property.class)
 				.add(Restrictions.eq("name", name))
 				.list()
 				.get(0);
+	}
+
+	/**
+	 * Obtiene una propiedad (habitación y departamento) por su id
+	 * @param id el id de la propiedad a obtener
+	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
+	 */
+	public Property getPropertyById(Long id) {
+		Property property;
+
+		try {
+			property = this.sessionFactory.getCurrentSession().find(Property.class, id);
+		} catch (IllegalArgumentException ex) {
+			property = null;
+		}
+
+		return property;
 	}
 }

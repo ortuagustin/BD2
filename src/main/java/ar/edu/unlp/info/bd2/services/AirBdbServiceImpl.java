@@ -92,6 +92,15 @@ public class AirBdbServiceImpl implements AirBdbService {
 	}
 
 	/**
+	 * Obtiene una propiedad (habitación y departamento) por su id
+	 * @param id el id de la propiedad a obtener
+	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
+	 */
+	private Property getPropertyById(Long id) {
+		return this.repository.getPropertyById(id);
+	}
+
+	/**
 	 * Crea una nueva reserva para un usuario dado en una propiedad puntual
 	 * @param propertyId id de la propiedad en la cual se quiere crear la reserva
 	 * @param userId id del usuario para el cual se quiere crear la reserva
@@ -102,7 +111,13 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public Reservation createReservation(long propertyId, long userId, Date from, Date to) throws ReservationException {
-		return null;
+		Property property = this.getPropertyById(propertyId);
+		User user = this.getUserById(userId);
+		Reservation reservation = user.rent(property, from, to);
+
+		this.repository.update(user);
+
+		return reservation;
 	}
 
 	/**
