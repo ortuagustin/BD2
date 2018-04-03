@@ -28,7 +28,7 @@ public class AirBdbRepository {
 
 	public <T> void save(T object) {
 		Session sess = sessionFactory.getCurrentSession();
-		Transaction tx;
+		Transaction tx = null;
 		try {
 			tx = sess.beginTransaction();
 			sess.save(object);
