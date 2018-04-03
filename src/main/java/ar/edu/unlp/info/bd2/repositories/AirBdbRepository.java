@@ -50,7 +50,7 @@ public class AirBdbRepository {
 	 * @param id el id del usuario
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
-	public User findUserById(Long id) {
+	public User getUserById(Long id) {
 		User user;
 
 		try {
