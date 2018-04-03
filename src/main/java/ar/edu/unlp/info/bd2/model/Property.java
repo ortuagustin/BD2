@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 public abstract class Property {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name;
+  protected String name;
 
   /**
   * @return the Id

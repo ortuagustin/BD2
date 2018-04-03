@@ -6,20 +6,23 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "apartments")
 public class Apartment extends Property {
-	String name, description, cityName;
-	double price;
-	int capacity;
-	int rooms;
+	private String description, cityName;
+	private Double price;
+	private Integer capacity;
+	private Integer rooms;
 
 	@Override
 	public Double getPrice() {
 		return 0.0;
 	}
 
-	public Apartment() {}
+	public Apartment() {
+		super();
+	}
 
-	public Apartment(String name, String description, double price, int capacity, int rooms,
+	public Apartment(String name, String description, Double price, Integer capacity, Integer rooms,
 			String cityName) {
+		this();
 		this.name = name;
 		this.description = description;
 		this.price = price;

@@ -34,8 +34,15 @@ public class AirBdbRepository {
 	}
 
 	public User getUserByUsername(String email) {
-		return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
+		return (User) sessionFactory.openSession().createCriteria(User.class)
 				.add(Restrictions.eq("username", email))
+				.list()
+				.get(0);
+	}
+
+	public Property getPropertyByName(String name) {
+		return (Apartment) sessionFactory.openSession().createCriteria(Apartment.class)
+				.add(Restrictions.eq("name", name))
 				.list()
 				.get(0);
 	}
@@ -44,7 +51,7 @@ public class AirBdbRepository {
 		User user;
 
 		try {
-			user = this.sessionFactory.getCurrentSession().find(User.class, id);
+			user = this.sessionFactory.openSession().find(User.class, id);
 		} catch (IllegalArgumentException ex) {
 			user = null;
 		}

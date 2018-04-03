@@ -88,7 +88,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public Property getPropertyByName(String name) {
-		return null;
+		return this.repository.getPropertyByName(name);
 	}
 
 	/**
