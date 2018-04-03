@@ -14,44 +14,8 @@ import javax.persistence.criteria.CriteriaQuery;
 
 public class AirBdbRepository {
 
-<<<<<<< HEAD
-  @Autowired
-  private SessionFactory sessionFactory;
-
-  public <T> void save(T object) {
-    Session sess = sessionFactory.getCurrentSession();
-    Transaction tx = null;
-    try {
-      tx = sess.beginTransaction();
-      sess.save(object);
-      tx.commit();
-    } catch (Exception e) {
-      if (tx != null)
-        tx.rollback();
-      throw e;
-    } finally {
-      sess.close();
-    }
-  }
-
-  public User getUserByUsername(String email) {
-    return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
-        .add(Restrictions.eq("email", email)).list()
-        .get(0);
-  }
-=======
 	@Autowired
 	private SessionFactory sessionFactory;
-
-	public User findById(Long id) {
-		User user;
-		try {
-			user = this.sessionFactory.getCurrentSession().find(User.class, id);
-		} catch (IllegalArgumentException ex) {
-			user = null;
-		}
-		return user;
-	}
 
 	public <T> void save(T object) {
 		Session sess = sessionFactory.getCurrentSession();
@@ -68,5 +32,22 @@ public class AirBdbRepository {
 			sess.close();
 		}
 	}
->>>>>>> e75e387b100706a168ac8f041f24bf573bebfae8
+
+	public User getUserByUsername(String email) {
+		return (User) sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("username", email))
+				.list().get(0);
+	}
+
+	public User findUserById(Long id) {
+		User user;
+
+		try {
+			user = this.sessionFactory.getCurrentSession().find(User.class, id);
+		} catch (IllegalArgumentException ex) {
+			user = null;
+		}
+
+		return user;
+	}
+
 }
