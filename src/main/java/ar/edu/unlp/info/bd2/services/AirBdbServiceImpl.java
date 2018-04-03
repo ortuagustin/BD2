@@ -20,7 +20,9 @@ public class AirBdbServiceImpl implements AirBdbService {
    */
   @Override
   public User createUser(String username, String name) {
-    return null;
+    User user = new User(username, name);
+    this.repository.save(user);
+    return user;
   }
 
   /**
@@ -30,7 +32,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    */
   @Override
   public User getUserByUsername(String email) {
-    return null;
+    return this.repository.getUserByUsername(email);
   }
 
   /**
