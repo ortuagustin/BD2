@@ -1,11 +1,16 @@
 package ar.edu.unlp.info.bd2.model;
 
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "PROPERTY_TYPE")
 public abstract class Property {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -46,4 +51,17 @@ public abstract class Property {
   public Double getPrice() {
     return price;
   };
+
+  @Override
+  public boolean equals(Object other) {
+    if (this == other)
+      return true;
+
+    if (!(other instanceof Property))
+      return false;
+
+    final Property property = (Property) other;
+
+    return this.getId().equals(property.getId());
+  }
 }
