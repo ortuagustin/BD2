@@ -58,7 +58,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	public Apartment createAparment(String name, String description, double price, int capacity, int rooms,
 			String cityName) {
-		Apartment apartment = new Apartment(name, description, price, capacity, rooms, cityName);
+		Apartment apartment = new Apartment(name, description, price, capacity, cityName, rooms);
 		this.repository.save(apartment);
 		return apartment;
 	}
@@ -76,7 +76,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	public PrivateRoom createRoom(String name, String description, double price, int capacity, int beds,
 			String cityName) {
-		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, beds, cityName);
+		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, cityName, beds);
 		this.repository.save(privateRoom);
 		return privateRoom;
 	}
