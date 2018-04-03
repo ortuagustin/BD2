@@ -18,7 +18,7 @@ public class AirBdbRepository {
 	private SessionFactory sessionFactory;
 
 	public <T> void save(T object) {
-		Session sess = sessionFactory.getCurrentSession();
+		Session sess = sessionFactory.openSession();
 		Transaction tx = null;
 		try {
 			tx = sess.beginTransaction();
@@ -34,8 +34,10 @@ public class AirBdbRepository {
 	}
 
 	public User getUserByUsername(String email) {
-		return (User) sessionFactory.getCurrentSession().createCriteria(User.class).add(Restrictions.eq("username", email))
-				.list().get(0);
+		return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
+				.add(Restrictions.eq("username", email))
+				.list()
+				.get(0);
 	}
 
 	public User findUserById(Long id) {

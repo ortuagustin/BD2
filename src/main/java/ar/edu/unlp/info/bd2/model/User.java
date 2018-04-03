@@ -16,8 +16,12 @@ public class User {
   private String name;
   private String username;
 
-  public User(String username, String name) {
+  public User() {
     super();
+  }
+
+  public User(String username, String name) {
+    this();
     this.username = username;
     this.name = name;
   }
