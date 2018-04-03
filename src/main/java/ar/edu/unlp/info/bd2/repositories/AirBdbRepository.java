@@ -68,7 +68,7 @@ public class AirBdbRepository {
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
 	public Property getPropertyByName(String name) {
-		return (Apartment) sessionFactory.openSession().createCriteria(Apartment.class)
+		return (Property) sessionFactory.openSession().createCriteria(Property.class)
 				.add(Restrictions.eq("name", name))
 				.list()
 				.get(0);
