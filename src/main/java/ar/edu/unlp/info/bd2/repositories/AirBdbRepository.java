@@ -17,15 +17,19 @@ public class AirBdbRepository {
 	@Autowired
 	private SessionFactory sessionFactory;
 
-	public User findById(Long id) {
-		User user;
+	public User findUserById(Long id) {
 		try {
-			user = this.sessionFactory.getCurrentSession().find(User.class, id);
+			return this.sessionFactory.getCurrentSession().find(User.class, id);
 		} catch (IllegalArgumentException ex) {
-			user = null;
+			return null;
 		}
-		return user;
 	}
+
+	public User getUserByUsername(String email) {
+		    return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
+		        .add(Restrictions.eq("email", email)).list()
+		        .get(0);
+		}
 
 	public <T> void save(T object) {
 		Session sess = sessionFactory.getCurrentSession();
