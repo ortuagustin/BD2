@@ -22,7 +22,7 @@ public class AirBdbRepository {
 		Transaction tx = null;
 		try {
 			tx = sess.beginTransaction();
-			sess.save(object);
+			sess.saveOrUpdate(object);
 			tx.commit();
 		} catch (Exception e) {
 			if (tx != null)
@@ -34,41 +34,22 @@ public class AirBdbRepository {
 	}
 
 	/**
-	 * Actualiza un objeto persistente en la base de datos
-	 * @param object el objecto a actualizar
-	 */
-	public <T> void update(T object) {
-		Session sess = sessionFactory.getCurrentSession();
-		sess.merge(object);
-	}
-
-	/**
 	 * Obtiene un usuario por su username (email)
 	 * @param email email del usuario a buscar
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
 	public User getUserByUsername(String email) {
-		return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
-				.add(Restrictions.eq("username", email))
-				.list()
-				.get(0);
-	}
-
-	/**
-	 * Obtiene un usuario por su id
-	 * @param id el id del usuario
-	 * @return el usuario que coincida o null si no hay ninguna coincidencia
-	 */
-	public User getUserById(Long id) {
-		User user;
+		Session sess = this.sessionFactory.openSession();
 
 		try {
-			user = this.sessionFactory.getCurrentSession().find(User.class, id);
-		} catch (IllegalArgumentException ex) {
-			user = null;
+			return (User) sess.createCriteria(User.class)
+												.add(Restrictions.eq("username", email))
+												.setMaxResults(1)
+												.uniqueResult();
 		}
-
-		return user;
+		finally {
+			sess.close();
+		}
 	}
 
 	/**
@@ -77,10 +58,26 @@ public class AirBdbRepository {
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
 	public Property getPropertyByName(String name) {
-		return (Property) sessionFactory.getCurrentSession().createCriteria(Property.class)
-				.add(Restrictions.eq("name", name))
-				.list()
-				.get(0);
+		Session sess = this.sessionFactory.openSession();
+
+		try {
+			return (Property) sess.createCriteria(Property.class)
+												.add(Restrictions.eq("name", name))
+												.setMaxResults(1)
+												.uniqueResult();
+		}
+		finally {
+			sess.close();
+		}
+	}
+
+	/**
+	 * Obtiene un usuario por su id
+	 * @param id el id del usuario
+	 * @return el usuario que coincida o null si no hay ninguna coincidencia
+	 */
+	public User getUserById(Long id) {
+		return (User) this.findById(id, User.class);
 	}
 
 	/**
@@ -89,14 +86,41 @@ public class AirBdbRepository {
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
 	public Property getPropertyById(Long id) {
-		Property property;
+		return (Property) this.findById(id, Property.class);
+	}
+
+	/**
+	 * Obtiene una reserva por su id
+	 * @param id id de la reserva que se busca
+	 * @return la reserva que coincida con ese id o <code>null</code> en caso contrario
+	 */
+	public Reservation getReservationById(Long id) {
+		return (Reservation) this.findById(id, Reservation.class);
+	}
+
+	/**
+	 * Metodo generico que obtiene un objeto persistente de cualquier clase
+	 * Los metodos publicos invocan a este metodo casteando al tipo que correspoda
+	 * @param id id del objeto persistido
+	 * @param klass la clase del objeto que se desea buscar
+	 * @return el objeto persistido
+	 */
+	private <T> T findById(Long id, Class<T> klass) {
+		T entity;
+
+		Session sess = this.sessionFactory.openSession();
 
 		try {
-			property = this.sessionFactory.getCurrentSession().find(Property.class, id);
-		} catch (IllegalArgumentException ex) {
-			property = null;
-		}
+			try {
+				entity = sess.find(klass, id);
+			} catch (IllegalArgumentException ex) {
+				entity = null;
+			}
 
-		return property;
+			return entity;
+		}
+		finally {
+			sess.close();
+		}
 	}
 }

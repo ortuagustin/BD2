@@ -1,11 +1,17 @@
 package ar.edu.unlp.info.bd2.model;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Id;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
@@ -21,6 +27,8 @@ public class Reservation {
   private User user;
   @ManyToOne
   private Property property;
+  @OneToOne(cascade = CascadeType.ALL)
+  private ReservationRating rating;
 
   // los defino como dateFrom y dateTo porque "from" y "to" son palabras reservadas
   private Date dateFrom, dateTo;
@@ -36,77 +44,109 @@ public class Reservation {
     this.reservationStatus = ReservationStatus.TO_CONFIRM;
   }
 
-  protected Reservation() {
+  public Reservation() {
     super();
   }
 
   /**
-  * @return the Price
+  * @return el precio por la reserva
   */
   public Double getPrice() {
     return this.getRentedNights() * property.getPrice();
   }
 
   /**
-  * @return the Property
+  * @return Propiedad alquilada
   */
   public Property getProperty() {
     return property;
   }
 
   /**
-   * @return the User
+   * @return Usuario que realizo la reserva
    */
   public User getUser() {
 	  return user;
   }
 
   /**
-   * @return the Id
+   * @return Id de la reserva
    */
   public Long getId() {
 	  return id;
   }
 
   /**
-  * @return the ReservationStatus
+  * @return estado actual de la reserva
   */
   public ReservationStatus getStatus() {
     return reservationStatus;
   }
 
   /**
-  * @return the Date the Reservation starts
+  * @return la fecha en la que la reserva empieza
   */
   public Date getFrom() {
     return dateFrom;
   }
 
   /**
-  * @return the Date the Reservation ends
+  * @return la fecha en la que la reserva termina
   */
   public Date getTo() {
     return dateTo;
   }
 
   /**
-  * @return the DateTime the Reservation starts
+  * @return la fecha+hora en la que la reserva empieza
   */
   private DateTime getFromAtDayStart() {
     return new DateTime(this.getFrom()).withTimeAtStartOfDay();
   }
 
   /**
-  * @return the DateTime the Reservation ends
+  * @return la fecha+hora en la que la reserva termina
   */
   private DateTime getToAtDayStart() {
     return new DateTime(this.getTo()).withTimeAtStartOfDay();
   }
 
   /**
-  * @return the Rented nights calculated usign the "from" and "to" Date attributes
+  * @return la cantidad de dias que dura la reserva
   */
   private Integer getRentedNights() {
     return Days.daysBetween(this.getFromAtDayStart(), this.getToAtDayStart()).getDays();
+  }
+
+  /**
+   * @return la calificacion realizada a la reserva
+   */
+  public ReservationRating getReservationRating() {
+    return this.rating;
+  }
+
+  /**
+  * Agrega una calificacion a la reserva con los puntos y comentario indicados si el metodo canRate() evalua a true
+  * @return el objeto ReservationRating creado con el puntaje y el comentario
+  */
+  public void rate(Integer points, String comment) throws RateException {
+    if (!this.canRate())
+      throw new RateException();
+
+    this.rating = new ReservationRating(points, comment);
+  }
+
+  /**
+  * @return devuelve true si se pueden agregar calificaciones a la reserva; false en caso contrario
+  */
+  private boolean canRate() {
+    return this.getStatus() == ReservationStatus.FINISHED;
+  }
+
+  /**
+   * Pasa la reserva a estado terminado (<code>ReservationStatus.FINISHED</code>)
+   */
+  public void finish() {
+    this.reservationStatus = ReservationStatus.FINISHED;
   }
 }

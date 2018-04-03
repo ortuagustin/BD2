@@ -1,10 +1,11 @@
 package ar.edu.unlp.info.bd2.model;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,8 +19,8 @@ public class User {
   private Long id;
   private String name;
   private String username;
-  @OneToMany(mappedBy = "user")
-  private List<Reservation> reservations = new ArrayList<Reservation>();
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+  private Set<Reservation> reservations = new HashSet<Reservation>();
 
   protected User() {
     super();
@@ -55,7 +56,7 @@ public class User {
   /**
    * @return The Reservations that the User has made
    */
-  public List<Reservation> getReservations() {
+  public Set<Reservation> getReservations() {
     return this.reservations;
   }
 

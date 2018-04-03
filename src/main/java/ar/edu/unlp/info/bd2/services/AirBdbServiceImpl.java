@@ -115,7 +115,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 		User user = this.getUserById(userId);
 		Reservation reservation = user.rent(property, from, to);
 
-		this.repository.update(user);
+		this.repository.save(reservation);
 
 		return reservation;
 	}
@@ -151,7 +151,10 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public void rateReservation(Long reservationId, int points, String comment) throws RateException {
+		Reservation reservation = this.getReservationById(reservationId);
 
+		reservation.rate(points, comment);
+		this.repository.save(reservation);
 	}
 
 	/**
@@ -160,7 +163,10 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public void finishReservation(Long id) {
+		Reservation reservation = this.getReservationById(id);
 
+		reservation.finish();
+		this.repository.save(reservation);
 	}
 
 	/**
@@ -170,7 +176,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public ReservationRating getRatingForReservation(Long reservationId) {
-		return null;
+		return this.getReservationById(reservationId).getReservationRating();
 	}
 
 	/**
@@ -180,6 +186,6 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public Reservation getReservationById(Long id) {
-		return null;
+		return this.repository.getReservationById(id);
 	}
 }
