@@ -18,11 +18,15 @@ public class AirBdbRepository {
 	private SessionFactory sessionFactory;
 
 	public User findUserById(Long id) {
+		User user;
+
 		try {
-			return this.sessionFactory.getCurrentSession().find(User.class, id);
+			user = this.sessionFactory.getCurrentSession().find(User.class, id);
 		} catch (IllegalArgumentException ex) {
-			return null;
+			user = null;
 		}
+
+		return user;
 	}
 
 	public User getUserByUsername(String email) {
