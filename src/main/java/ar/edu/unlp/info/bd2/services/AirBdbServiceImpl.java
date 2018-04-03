@@ -42,7 +42,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public User getUserById(Long id) {
-		return this.repository.findById(id);
+		return this.repository.findUserById(id);
 	}
 
 	/**

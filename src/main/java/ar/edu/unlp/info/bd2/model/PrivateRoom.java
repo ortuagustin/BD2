@@ -16,6 +16,8 @@ public class PrivateRoom extends Property {
 		return 0.0;
 	}
 
+	public PrivateRoom() {}
+
 	public PrivateRoom(String name, String description, double price, int capacity, int beds, String cityName) {
 		this.name = name;
 		this.description = description;

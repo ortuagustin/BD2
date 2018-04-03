@@ -16,6 +16,8 @@ public class Apartment extends Property {
 		return 0.0;
 	}
 
+	public Apartment() {}
+
 	public Apartment(String name, String description, double price, int capacity, int rooms,
 			String cityName) {
 		this.name = name;
