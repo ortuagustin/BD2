@@ -8,15 +8,15 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Date;
-
-import javax.persistence.criteria.CriteriaQuery;
-
 public class AirBdbRepository {
 
 	@Autowired
 	private SessionFactory sessionFactory;
 
+	/**
+	 * Persiste el objeto en la base de datos, contemplando el uso de transacciones
+	 * @param object el objecto a persistir
+	 */
 	public <T> void save(T object) {
 		Session sess = sessionFactory.openSession();
 		Transaction tx = null;
@@ -33,6 +33,11 @@ public class AirBdbRepository {
 		}
 	}
 
+	/**
+	 * Obtiene un usuario por su username (email)
+	 * @param email email del usuario a buscar
+	 * @return el usuario que coincida o null si no hay ninguna coincidencia
+	 */
 	public User getUserByUsername(String email) {
 		return (User) sessionFactory.openSession().createCriteria(User.class)
 				.add(Restrictions.eq("username", email))
@@ -40,13 +45,11 @@ public class AirBdbRepository {
 				.get(0);
 	}
 
-	public Property getPropertyByName(String name) {
-		return (Apartment) sessionFactory.openSession().createCriteria(Apartment.class)
-				.add(Restrictions.eq("name", name))
-				.list()
-				.get(0);
-	}
-
+	/**
+	 * Obtiene un usuario por su id
+	 * @param id el id del usuario
+	 * @return el usuario que coincida o null si no hay ninguna coincidencia
+	 */
 	public User findUserById(Long id) {
 		User user;
 
@@ -59,4 +62,15 @@ public class AirBdbRepository {
 		return user;
 	}
 
+	/**
+	 * Obtiene una propiedad (habitación y departamento) por su nombre
+	 * @param name nombre de la propiedad a obtener
+	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
+	 */
+	public Property getPropertyByName(String name) {
+		return (Apartment) sessionFactory.openSession().createCriteria(Apartment.class)
+				.add(Restrictions.eq("name", name))
+				.list()
+				.get(0);
+	}
 }
