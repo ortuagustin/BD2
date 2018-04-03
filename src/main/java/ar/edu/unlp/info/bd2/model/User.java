@@ -47,6 +47,9 @@ public class User {
     this.username = username;
   }
 
+  /**
+   * @return The Reservations that the User made
+   */
   public List<Reservation> getReservations() {
     return null;
   }

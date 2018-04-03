@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "reservation")
+@Table(name = "reservations")
 public class Reservation {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
