@@ -42,7 +42,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public User getUserById(Long id) {
-		return this.repository.findUserById(id);
+		return this.repository.getUserById(id);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	public Apartment createAparment(String name, String description, double price, int capacity, int rooms,
 			String cityName) {
-		Apartment apartment = new Apartment(name, description, price, capacity, rooms, cityName);
+		Apartment apartment = new Apartment(name, description, price, capacity, cityName, rooms);
 		this.repository.save(apartment);
 		return apartment;
 	}
@@ -76,7 +76,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	public PrivateRoom createRoom(String name, String description, double price, int capacity, int beds,
 			String cityName) {
-		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, beds, cityName);
+		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, cityName, beds);
 		this.repository.save(privateRoom);
 		return privateRoom;
 	}
@@ -88,7 +88,16 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public Property getPropertyByName(String name) {
-		return null;
+		return this.repository.getPropertyByName(name);
+	}
+
+	/**
+	 * Obtiene una propiedad (habitación y departamento) por su id
+	 * @param id el id de la propiedad a obtener
+	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
+	 */
+	private Property getPropertyById(Long id) {
+		return this.repository.getPropertyById(id);
 	}
 
 	/**
@@ -102,8 +111,12 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public Reservation createReservation(long propertyId, long userId, Date from, Date to) throws ReservationException {
-		Reservation reservation = new Reservation(propertyId, userId, from, to);
+		Property property = this.getPropertyById(propertyId);
+		User user = this.getUserById(userId);
+		Reservation reservation = user.rent(property, from, to);
+
 		this.repository.save(reservation);
+
 		return reservation;
 	}
 
@@ -138,7 +151,10 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public void rateReservation(Long reservationId, int points, String comment) throws RateException {
+		Reservation reservation = this.getReservationById(reservationId);
 
+		reservation.rate(points, comment);
+		this.repository.save(reservation);
 	}
 
 	/**
@@ -147,7 +163,10 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public void finishReservation(Long id) {
+		Reservation reservation = this.getReservationById(id);
 
+		reservation.finish();
+		this.repository.save(reservation);
 	}
 
 	/**
@@ -157,7 +176,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public ReservationRating getRatingForReservation(Long reservationId) {
-		return null;
+		return this.getReservationById(reservationId).getReservationRating();
 	}
 
 	/**
@@ -167,6 +186,6 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public Reservation getReservationById(Long id) {
-		return null;
+		return this.repository.getReservationById(id);
 	}
 }

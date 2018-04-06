@@ -1,11 +1,15 @@
 package ar.edu.unlp.info.bd2.model;
 
-import java.util.List;
+import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,8 +19,10 @@ public class User {
   private Long id;
   private String name;
   private String username;
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+  private Set<Reservation> reservations = new HashSet<Reservation>();
 
-  public User() {
+  protected User() {
     super();
   }
 
@@ -30,14 +36,14 @@ public class User {
    * @return the id
    */
   public Long getId() {
-    return id;
+    return this.id;
   }
 
   /**
    * @return the username
    */
   public String getUsername() {
-    return username;
+    return this.username;
   }
 
   /**
@@ -47,7 +53,30 @@ public class User {
     this.username = username;
   }
 
-  public List<Reservation> getReservations() {
-    return null;
+  /**
+   * @return The Reservations that the User has made
+   */
+  public Set<Reservation> getReservations() {
+    return this.reservations;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (this == other)
+      return true;
+
+    if (!(other instanceof User))
+      return false;
+
+    final User user = (User) other;
+
+    return this.getUsername().equals(user.getUsername());
+  }
+
+  public Reservation rent(Property property, Date from, Date to) {
+    Reservation reservation = new Reservation(property, this, from, to);
+    this.reservations.add(reservation);
+
+    return reservation;
   }
 }

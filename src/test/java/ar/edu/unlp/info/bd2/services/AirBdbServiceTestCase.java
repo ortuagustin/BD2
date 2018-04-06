@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppConfig.class, HibernateConfiguration.class}, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = { AppConfig.class, HibernateConfiguration.class }, loader = AnnotationConfigContextLoader.class)
 @Transactional
 @Rollback(true)
 public class AirBdbServiceTestCase {
