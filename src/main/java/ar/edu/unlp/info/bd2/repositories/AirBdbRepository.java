@@ -33,9 +33,9 @@ public class AirBdbRepository {
 		}
 	}
 
-	public User getUserByUsername(String email) {
+	public User getUserByUsername(String username) {
 		return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
-				.add(Restrictions.eq("username", email))
+				.add(Restrictions.eq("username", username))
 				.list()
 				.get(0);
 	}
