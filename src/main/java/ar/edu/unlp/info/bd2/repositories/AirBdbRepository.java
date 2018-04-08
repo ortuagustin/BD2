@@ -2,6 +2,9 @@ package ar.edu.unlp.info.bd2.repositories;
 
 import ar.edu.unlp.info.bd2.model.*;
 
+import java.util.Date;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -25,39 +28,28 @@ public class AirBdbRepository {
 			sess.saveOrUpdate(object);
 			tx.commit();
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (tx != null)
 				tx.rollback();
-			throw e;
 		} finally {
 			sess.close();
 		}
 	}
 
-<<<<<<< HEAD
-	public User getUserByUsername(String username) {
-		return (User) sessionFactory.getCurrentSession().createCriteria(User.class)
-				.add(Restrictions.eq("username", username))
-				.list()
-				.get(0);
-=======
 	/**
 	 * Obtiene un usuario por su username (email)
-	 * @param email email del usuario a buscar
+	 * @param username nombre de usuario a buscar
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
-	public User getUserByUsername(String email) {
+	public User getUserByUsername(String username) {
 		Session sess = this.sessionFactory.openSession();
 
 		try {
-			return (User) sess.createCriteria(User.class)
-												.add(Restrictions.eq("username", email))
-												.setMaxResults(1)
-												.uniqueResult();
-		}
-		finally {
+			return (User) sess.createCriteria(User.class).add(Restrictions.eq("username", username)).setMaxResults(1)
+					.uniqueResult();
+		} finally {
 			sess.close();
 		}
->>>>>>> e3c55f00f6462d0f0468f09cfdfe113a0c84d9ab
 	}
 
 	/**
@@ -69,12 +61,9 @@ public class AirBdbRepository {
 		Session sess = this.sessionFactory.openSession();
 
 		try {
-			return (Property) sess.createCriteria(Property.class)
-												.add(Restrictions.eq("name", name))
-												.setMaxResults(1)
-												.uniqueResult();
-		}
-		finally {
+			return (Property) sess.createCriteria(Property.class).add(Restrictions.eq("name", name)).setMaxResults(1)
+					.uniqueResult();
+		} finally {
 			sess.close();
 		}
 	}
@@ -107,28 +96,78 @@ public class AirBdbRepository {
 	}
 
 	/**
+	 * Metodo generico que elimina un objeto de cualquier clase
+	 * Los metodos publicos invocan a este metodo casteando al tipo que corresponda
+	 * @param object objeto que se desea borrar
+	 */
+	public <T> void remove(T obj) {
+		Session sess = this.sessionFactory.openSession();
+		try {
+			sess.delete(obj);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			sess.close();
+		}
+	}
+
+	/**
 	 * Metodo generico que obtiene un objeto persistente de cualquier clase
-	 * Los metodos publicos invocan a este metodo casteando al tipo que correspoda
+	 * Los metodos publicos invocan a este metodo casteando al tipo que corresponda
 	 * @param id id del objeto persistido
 	 * @param klass la clase del objeto que se desea buscar
 	 * @return el objeto persistido
 	 */
 	private <T> T findById(Long id, Class<T> klass) {
-		T entity;
-
+		T entity = null;
 		Session sess = this.sessionFactory.openSession();
 
 		try {
-			try {
-				entity = sess.find(klass, id);
-			} catch (IllegalArgumentException ex) {
-				entity = null;
-			}
-
-			return entity;
-		}
-		finally {
+			entity = sess.find(klass, id);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
 			sess.close();
 		}
+		return entity;
+	}
+
+	/**
+	 * Metodo generico que obtiene una lista de objetos persistente de cualquier clase
+	 * Los metodos publicos invocan a este metodo casteando al tipo que corresponda
+	 * @param klass la clase del objeto que se desea buscar
+	 * @return el objeto persistido
+	 */
+	private <T> List<T> findByAll(Class<T> klass) {
+		List<T> entityList = null;
+
+		Session session = this.sessionFactory.openSession();
+		try {
+			entityList = session.createCriteria(klass).list();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return entityList;
+	}
+
+	/**
+	* Obtiene una reserva a partir de su property entre determinadas fechas
+	* @param property Property por la que se buscara la reserva
+	* @param from fecha de inicio de reserva que se buscara
+	* @param to fecha de fin de reserva que se buscara
+	* @return la reserva que coincida con ese id o <code>null</code> en caso contrario
+	*/
+	public Reservation getReservationByProperty(Property property, Date from, Date to) {
+		Session session = this.sessionFactory.openSession();
+		String query = "SELECT res FROM Reservation res WHERE res.property = :property"
+				+ " AND res.reservationStatus != :statusCanceled AND res.reservationStatus != :statusFinished"
+				+ " AND ((res.dateFrom BETWEEN :from1 AND :to1) OR (res.dateTo BETWEEN :from2 AND :to2))";
+		return (Reservation) session.createQuery(query).setParameter("property", property)
+				.setParameter("statusCanceled", ReservationStatus.CANCELLED)
+				.setParameter("statusFinished", ReservationStatus.FINISHED).setParameter("from1", from)
+				.setParameter("to1", to).setParameter("from2", from).setParameter("to2", to).setMaxResults(1) // Consultar si esto lo hace mas optimo
+				.uniqueResult();
 	}
 }

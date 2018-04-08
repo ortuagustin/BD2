@@ -1,16 +1,12 @@
 package ar.edu.unlp.info.bd2.model;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.Id;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Table;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -148,5 +144,9 @@ public class Reservation {
    */
   public void finish() {
     this.reservationStatus = ReservationStatus.FINISHED;
+  }
+
+  public void setStatus(ReservationStatus status) {
+	  this.reservationStatus = status;
   }
 }

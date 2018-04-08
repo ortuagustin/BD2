@@ -5,6 +5,7 @@ import ar.edu.unlp.info.bd2.repositories.AirBdbRepository;
 
 import java.util.Date;
 
+
 public class AirBdbServiceImpl implements AirBdbService {
 	private AirBdbRepository repository;
 
@@ -111,13 +112,19 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public Reservation createReservation(long propertyId, long userId, Date from, Date to) throws ReservationException {
-		Property property = this.getPropertyById(propertyId);
-		User user = this.getUserById(userId);
-		Reservation reservation = user.rent(property, from, to);
+		Reservation reservation = null;
+		if (this.isPropertyAvailable(propertyId, from, to)) {
+			// Solo paso si la propiedad esta disponible
+			Property property = this.getPropertyById(propertyId);
+			User user = this.getUserById(userId);
+			reservation = user.rent(property, from, to);
 
-		this.repository.save(reservation);
+			this.repository.save(reservation);
 
-		return reservation;
+			return reservation;
+		} else {
+			throw new ReservationException();
+		}
 	}
 
 	/**
@@ -129,7 +136,9 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public boolean isPropertyAvailable(Long id, Date from, Date to) {
-		return false;
+		Property property = this.repository.getPropertyById(id);
+		Reservation reservation = this.repository.getReservationByProperty(property, from, to);
+		return reservation == null;
 	}
 
 	/**
@@ -138,7 +147,9 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	public void cancelReservation(Long reservationId) {
-
+		Reservation reservation = this.repository.getReservationById(reservationId);
+		reservation.setStatus( ReservationStatus.CANCELLED);
+		this.repository.save(reservation);
 	}
 
 	/**
@@ -188,4 +199,6 @@ public class AirBdbServiceImpl implements AirBdbService {
 	public Reservation getReservationById(Long id) {
 		return this.repository.getReservationById(id);
 	}
+
+
 }
