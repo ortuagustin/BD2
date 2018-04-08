@@ -40,3 +40,4 @@ private
 
 #database
 #pom.xml
+.sts4-cache/*
