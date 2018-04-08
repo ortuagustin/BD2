@@ -115,17 +115,17 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	public Reservation createReservation(long propertyId, long userId, Date from, Date to) throws ReservationException {
 		Reservation reservation = null;
-		if (this.isPropertyAvailable(propertyId, from, to)) {
-			Property property = this.getPropertyById(propertyId);
-			User user = this.getUserById(userId);
-			reservation = user.rent(property, from, to);
 
-			this.repository.save(reservation);
-
-			return reservation;
-		} else {
+		if (!this.isPropertyAvailable(propertyId, from, to)) {
 			throw new ReservationException();
 		}
+
+		Property property = this.getPropertyById(propertyId);
+		User user = this.getUserById(userId);
+		reservation = user.rent(property, from, to);
+		this.repository.save(reservation);
+
+		return reservation;
 	}
 
 	/**
