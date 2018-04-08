@@ -5,7 +5,6 @@ import ar.edu.unlp.info.bd2.repositories.AirBdbRepository;
 
 import java.util.Date;
 
-
 public class AirBdbServiceImpl implements AirBdbService {
 	private AirBdbRepository repository;
 
@@ -23,6 +22,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	public User createUser(String username, String name) {
 		User user = new User(username, name);
 		this.repository.save(user);
+
 		return user;
 	}
 
@@ -61,6 +61,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 			String cityName) {
 		Apartment apartment = new Apartment(name, description, price, capacity, cityName, rooms);
 		this.repository.save(apartment);
+
 		return apartment;
 	}
 
@@ -79,6 +80,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 			String cityName) {
 		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, cityName, beds);
 		this.repository.save(privateRoom);
+
 		return privateRoom;
 	}
 
@@ -114,7 +116,6 @@ public class AirBdbServiceImpl implements AirBdbService {
 	public Reservation createReservation(long propertyId, long userId, Date from, Date to) throws ReservationException {
 		Reservation reservation = null;
 		if (this.isPropertyAvailable(propertyId, from, to)) {
-			// Solo paso si la propiedad esta disponible
 			Property property = this.getPropertyById(propertyId);
 			User user = this.getUserById(userId);
 			reservation = user.rent(property, from, to);
@@ -138,6 +139,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	public boolean isPropertyAvailable(Long id, Date from, Date to) {
 		Property property = this.repository.getPropertyById(id);
 		Reservation reservation = this.repository.getReservationByProperty(property, from, to);
+
 		return reservation == null;
 	}
 
@@ -149,6 +151,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	public void cancelReservation(Long reservationId) {
 		Reservation reservation = this.repository.getReservationById(reservationId);
 		reservation.setStatus( ReservationStatus.CANCELLED);
+
 		this.repository.save(reservation);
 	}
 
@@ -199,6 +202,4 @@ public class AirBdbServiceImpl implements AirBdbService {
 	public Reservation getReservationById(Long id) {
 		return this.repository.getReservationById(id);
 	}
-
-
 }
