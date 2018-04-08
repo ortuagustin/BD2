@@ -102,10 +102,9 @@ public class AirBdbRepository {
 	 */
 	public <T> void remove(T obj) {
 		Session sess = this.sessionFactory.openSession();
+
 		try {
 			sess.delete(obj);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		} finally {
 			sess.close();
 		}
@@ -127,6 +126,7 @@ public class AirBdbRepository {
 		} finally {
 			sess.close();
 		}
+
 		return entity;
 	}
 
@@ -139,10 +139,11 @@ public class AirBdbRepository {
 	*/
 	public Reservation getReservationByProperty(Property property, Date from, Date to) {
 		Session session = this.sessionFactory.openSession();
+
 		String query = "SELECT res FROM Reservation res WHERE res.property = :property"
 				+ " AND res.reservationStatus != :statusCanceled AND res.reservationStatus != :statusFinished"
 				+ " AND ((res.dateFrom BETWEEN :from1 AND :to1) OR (res.dateTo BETWEEN :from2 AND :to2))";
-		
+
 		Reservation reservation = null;
 		try {
 			reservation = (Reservation) session.createQuery(query).setParameter("property", property)
