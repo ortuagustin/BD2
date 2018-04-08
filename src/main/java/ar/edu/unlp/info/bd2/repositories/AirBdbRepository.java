@@ -3,7 +3,6 @@ package ar.edu.unlp.info.bd2.repositories;
 import ar.edu.unlp.info.bd2.model.*;
 
 import java.util.Date;
-import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -28,7 +27,6 @@ public class AirBdbRepository {
 			sess.saveOrUpdate(object);
 			tx.commit();
 		} catch (Exception e) {
-			e.printStackTrace();
 			if (tx != null)
 				tx.rollback();
 		} finally {
@@ -45,7 +43,8 @@ public class AirBdbRepository {
 		Session sess = this.sessionFactory.openSession();
 
 		try {
-			return (User) sess.createCriteria(User.class).add(Restrictions.eq("username", username)).setMaxResults(1)
+			return (User) sess.createCriteria(User.class).add(Restrictions.eq("username", username))
+					.setMaxResults(1)
 					.uniqueResult();
 		} finally {
 			sess.close();
@@ -61,7 +60,8 @@ public class AirBdbRepository {
 		Session sess = this.sessionFactory.openSession();
 
 		try {
-			return (Property) sess.createCriteria(Property.class).add(Restrictions.eq("name", name)).setMaxResults(1)
+			return (Property) sess.createCriteria(Property.class).add(Restrictions.eq("name", name))
+					.setMaxResults(1)
 					.uniqueResult();
 		} finally {
 			sess.close();
@@ -124,32 +124,10 @@ public class AirBdbRepository {
 
 		try {
 			entity = sess.find(klass, id);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		} finally {
 			sess.close();
 		}
 		return entity;
-	}
-
-	/**
-	 * Metodo generico que obtiene una lista de objetos persistente de cualquier clase
-	 * Los metodos publicos invocan a este metodo casteando al tipo que corresponda
-	 * @param klass la clase del objeto que se desea buscar
-	 * @return el objeto persistido
-	 */
-	private <T> List<T> findByAll(Class<T> klass) {
-		List<T> entityList = null;
-
-		Session session = this.sessionFactory.openSession();
-		try {
-			entityList = session.createCriteria(klass).list();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		} finally {
-			session.close();
-		}
-		return entityList;
 	}
 
 	/**
@@ -164,10 +142,18 @@ public class AirBdbRepository {
 		String query = "SELECT res FROM Reservation res WHERE res.property = :property"
 				+ " AND res.reservationStatus != :statusCanceled AND res.reservationStatus != :statusFinished"
 				+ " AND ((res.dateFrom BETWEEN :from1 AND :to1) OR (res.dateTo BETWEEN :from2 AND :to2))";
-		return (Reservation) session.createQuery(query).setParameter("property", property)
+		
+		Reservation reservation = null;
+		try {
+			reservation = (Reservation) session.createQuery(query).setParameter("property", property)
 				.setParameter("statusCanceled", ReservationStatus.CANCELLED)
 				.setParameter("statusFinished", ReservationStatus.FINISHED).setParameter("from1", from)
 				.setParameter("to1", to).setParameter("from2", from).setParameter("to2", to).setMaxResults(1) // Consultar si esto lo hace mas optimo
 				.uniqueResult();
+		} finally {
+			session.close();
+		}
+
+		return reservation;
 	}
 }
