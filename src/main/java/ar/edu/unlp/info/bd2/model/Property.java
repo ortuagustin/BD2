@@ -35,22 +35,35 @@ public abstract class Property {
   * @return the Id
   */
   public Long getId() {
-    return id;
+    return this.id;
   }
 
   /**
    * @return the Name
    */
   public String getName() {
-    return name;
+    return this.name;
   }
 
   /**
    * @return the Price
    */
   public Double getPrice() {
-    return price;
+    return this.price;
   };
+
+  public String getDescription() {
+    return this.description;
+  };
+
+  public String getCityName() {
+    return this.cityName;
+  };
+
+  public Integer getCapacity() {
+    return this.capacity;
+  };
+  
 
   @Override
   public boolean equals(Object other) {

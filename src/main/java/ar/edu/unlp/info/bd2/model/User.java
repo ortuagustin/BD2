@@ -46,6 +46,10 @@ public class User {
     return this.username;
   }
 
+  public String getName() {
+    return this.name;
+  }
+
   /**
    * @param username the username to set
    */

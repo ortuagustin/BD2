@@ -16,4 +16,8 @@ public class Apartment extends Property {
 	protected Apartment() {
 		super();
 	}
+
+	public Integer getRooms() {
+		return this.rooms;
+	}
 }
