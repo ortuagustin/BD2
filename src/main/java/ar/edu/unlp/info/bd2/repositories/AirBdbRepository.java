@@ -43,7 +43,8 @@ public class AirBdbRepository {
 		Session sess = this.sessionFactory.openSession();
 
 		try {
-			return (User) sess.createCriteria(User.class).add(Restrictions.eq("username", username))
+			return (User) sess.createCriteria(User.class)
+					.add(Restrictions.eq("username", username))
 					.setMaxResults(1)
 					.uniqueResult();
 		} finally {
@@ -60,7 +61,8 @@ public class AirBdbRepository {
 		Session sess = this.sessionFactory.openSession();
 
 		try {
-			return (Property) sess.createCriteria(Property.class).add(Restrictions.eq("name", name))
+			return (Property) sess.createCriteria(Property.class)
+					.add(Restrictions.eq("name", name))
 					.setMaxResults(1)
 					.uniqueResult();
 		} finally {
@@ -148,8 +150,12 @@ public class AirBdbRepository {
 		try {
 			reservation = (Reservation) session.createQuery(query).setParameter("property", property)
 				.setParameter("statusCanceled", ReservationStatus.CANCELLED)
-				.setParameter("statusFinished", ReservationStatus.FINISHED).setParameter("from1", from)
-				.setParameter("to1", to).setParameter("from2", from).setParameter("to2", to).setMaxResults(1) // Consultar si esto lo hace mas optimo
+				.setParameter("statusFinished", ReservationStatus.FINISHED)
+				.setParameter("from1", from)
+				.setParameter("to1", to)
+				.setParameter("from2", from)
+				.setParameter("to2", to)
+				.setMaxResults(1)
 				.uniqueResult();
 		} finally {
 			session.close();
