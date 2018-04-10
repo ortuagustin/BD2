@@ -150,7 +150,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	public void cancelReservation(Long reservationId) {
 		Reservation reservation = this.repository.getReservationById(reservationId);
-		reservation.setStatus( ReservationStatus.CANCELLED);
+		reservation.setStatus(ReservationStatus.CANCELLED);
 
 		this.repository.save(reservation);
 	}
