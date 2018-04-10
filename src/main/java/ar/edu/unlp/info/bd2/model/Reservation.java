@@ -55,42 +55,42 @@ public class Reservation {
   * @return Propiedad alquilada
   */
   public Property getProperty() {
-    return property;
+    return this.property;
   }
 
   /**
    * @return Usuario que realizo la reserva
    */
   public User getUser() {
-	  return user;
+	  return this.user;
   }
 
   /**
    * @return Id de la reserva
    */
   public Long getId() {
-	  return id;
+	  return this.id;
   }
 
   /**
   * @return estado actual de la reserva
   */
   public ReservationStatus getStatus() {
-    return reservationStatus;
+    return this.reservationStatus;
   }
 
   /**
   * @return la fecha en la que la reserva empieza
   */
   public Date getFrom() {
-    return dateFrom;
+    return this.dateFrom;
   }
 
   /**
   * @return la fecha en la que la reserva termina
   */
   public Date getTo() {
-    return dateTo;
+    return this.dateTo;
   }
 
   /**

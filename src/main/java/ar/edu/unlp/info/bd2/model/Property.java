@@ -63,7 +63,6 @@ public abstract class Property {
   public Integer getCapacity() {
     return this.capacity;
   };
-  
 
   @Override
   public boolean equals(Object other) {
