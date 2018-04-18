@@ -5,7 +5,7 @@ import ar.edu.unlp.info.bd2.repositories.AirBdbRepository;
 
 import java.util.Date;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 public class AirBdbServiceImpl implements AirBdbService {
 	private AirBdbRepository repository;
@@ -35,6 +35,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public User getUserByUsername(String email) {
 		return this.repository.getUserByUsername(email);
 	}
@@ -45,6 +46,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public User getUserById(Long id) {
 		return this.repository.getUserById(id);
 	}
@@ -95,6 +97,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public Property getPropertyByName(String name) {
 		return this.repository.getPropertyByName(name);
 	}
@@ -104,6 +107,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @param id el id de la propiedad a obtener
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
+	@Transactional(readOnly = true)
 	private Property getPropertyById(Long id) {
 		return this.repository.getPropertyById(id);
 	}
@@ -142,6 +146,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return <code>true</code> si la propiedad está disponible para ser reservada o <code>false</code> en caso contrario
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public boolean isPropertyAvailable(Long id, Date from, Date to) {
 		Property property = this.repository.getPropertyById(id);
 		Reservation reservation = this.repository.getReservationByProperty(property, from, to);
@@ -197,6 +202,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return la evaluación que concida para esa propiedad
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public ReservationRating getRatingForReservation(Long reservationId) {
 		return this.getReservationById(reservationId).getReservationRating();
 	}
@@ -207,6 +213,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return la reserva que coincida con ese id o <code>null</code> en caso contrario
 	 */
 	@Override
+	@Transactional(readOnly = true)
 	public Reservation getReservationById(Long id) {
 		return this.repository.getReservationById(id);
 	}
