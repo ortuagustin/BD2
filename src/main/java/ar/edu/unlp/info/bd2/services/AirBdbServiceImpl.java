@@ -63,8 +63,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	@Transactional
-	public Apartment createAparment(String name, String description, double price, int capacity, int rooms,
-			String cityName) {
+	public Apartment createAparment(String name, String description, double price, int capacity, int rooms, String cityName) {
 		Apartment apartment = new Apartment(name, description, price, capacity, cityName, rooms);
 		this.repository.save(apartment);
 
@@ -83,8 +82,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	@Transactional
-	public PrivateRoom createRoom(String name, String description, double price, int capacity, int beds,
-			String cityName) {
+	public PrivateRoom createRoom(String name, String description, double price, int capacity, int beds, String cityName) {
 		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, cityName, beds);
 		this.repository.save(privateRoom);
 
@@ -124,15 +122,13 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional
 	public Reservation createReservation(long propertyId, long userId, Date from, Date to) throws ReservationException {
-		Reservation reservation = null;
-
 		if (!this.isPropertyAvailable(propertyId, from, to)) {
 			throw new ReservationException();
 		}
 
 		Property property = this.getPropertyById(propertyId);
 		User user = this.getUserById(userId);
-		reservation = user.rent(property, from, to);
+		Reservation reservation = user.rent(property, from, to);
 		this.repository.save(reservation);
 
 		return reservation;

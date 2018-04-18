@@ -28,13 +28,13 @@ public class ReservationRating {
   * @return the Points
   */
   public int getPoints() {
-    return points;
+    return this.points;
   }
 
   /**
   * @return the Comment
   */
   public String getComment() {
-    return comment;
+    return this.comment;
   }
 }

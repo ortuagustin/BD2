@@ -33,7 +33,6 @@ public class AirBdbRepository {
 
 		return (User) sess.createCriteria(User.class)
 				.add(Restrictions.eq("username", username))
-				.setMaxResults(1)
 				.uniqueResult();
 	}
 
@@ -47,7 +46,6 @@ public class AirBdbRepository {
 
 		return (Property) sess.createCriteria(Property.class)
 				.add(Restrictions.eq("name", name))
-				.setMaxResults(1)
 				.uniqueResult();
 	}
 
@@ -96,10 +94,9 @@ public class AirBdbRepository {
 	 * @return el objeto persistido
 	 */
 	private <T> T findById(Long id, Class<T> klass) {
-		T entity = null;
 		Session sess = this.sessionFactory.getCurrentSession();
 
-		entity = sess.find(klass, id);
+		T entity = sess.find(klass, id);
 
 		return entity;
 	}
@@ -126,7 +123,6 @@ public class AirBdbRepository {
 			.setParameter("to1", to)
 			.setParameter("from2", from)
 			.setParameter("to2", to)
-			.setMaxResults(1)
 			.uniqueResult();
 
 		return reservation;
