@@ -6,12 +6,10 @@ import java.util.Date;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AirBdbRepository {
-
 	@Autowired
 	private SessionFactory sessionFactory;
 
@@ -20,18 +18,9 @@ public class AirBdbRepository {
 	 * @param object el objecto a persistir
 	 */
 	public <T> void save(T object) {
-		Session sess = sessionFactory.openSession();
-		Transaction tx = null;
-		try {
-			tx = sess.beginTransaction();
-			sess.saveOrUpdate(object);
-			tx.commit();
-		} catch (Exception e) {
-			if (tx != null)
-				tx.rollback();
-		} finally {
-			sess.close();
-		}
+		Session sess = sessionFactory.getCurrentSession();
+
+		sess.saveOrUpdate(object);
 	}
 
 	/**
@@ -40,16 +29,12 @@ public class AirBdbRepository {
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
 	public User getUserByUsername(String username) {
-		Session sess = this.sessionFactory.openSession();
+		Session sess = this.sessionFactory.getCurrentSession();
 
-		try {
-			return (User) sess.createCriteria(User.class)
-					.add(Restrictions.eq("username", username))
-					.setMaxResults(1)
-					.uniqueResult();
-		} finally {
-			sess.close();
-		}
+		return (User) sess.createCriteria(User.class)
+				.add(Restrictions.eq("username", username))
+				.setMaxResults(1)
+				.uniqueResult();
 	}
 
 	/**
@@ -58,16 +43,12 @@ public class AirBdbRepository {
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
 	public Property getPropertyByName(String name) {
-		Session sess = this.sessionFactory.openSession();
+		Session sess = this.sessionFactory.getCurrentSession();
 
-		try {
-			return (Property) sess.createCriteria(Property.class)
-					.add(Restrictions.eq("name", name))
-					.setMaxResults(1)
-					.uniqueResult();
-		} finally {
-			sess.close();
-		}
+		return (Property) sess.createCriteria(Property.class)
+				.add(Restrictions.eq("name", name))
+				.setMaxResults(1)
+				.uniqueResult();
 	}
 
 	/**
@@ -103,13 +84,8 @@ public class AirBdbRepository {
 	 * @param object objeto que se desea borrar
 	 */
 	public <T> void remove(T obj) {
-		Session sess = this.sessionFactory.openSession();
-
-		try {
-			sess.delete(obj);
-		} finally {
-			sess.close();
-		}
+		Session sess = this.sessionFactory.getCurrentSession();
+		sess.delete(obj);
 	}
 
 	/**
@@ -121,13 +97,9 @@ public class AirBdbRepository {
 	 */
 	private <T> T findById(Long id, Class<T> klass) {
 		T entity = null;
-		Session sess = this.sessionFactory.openSession();
+		Session sess = this.sessionFactory.getCurrentSession();
 
-		try {
-			entity = sess.find(klass, id);
-		} finally {
-			sess.close();
-		}
+		entity = sess.find(klass, id);
 
 		return entity;
 	}
@@ -140,26 +112,22 @@ public class AirBdbRepository {
 	* @return la reserva que coincida con ese id o <code>null</code> en caso contrario
 	*/
 	public Reservation getReservationByProperty(Property property, Date from, Date to) {
-		Session session = this.sessionFactory.openSession();
+		Session session = this.sessionFactory.getCurrentSession();
 
 		String query = "SELECT res FROM Reservation res WHERE res.property = :property"
 				+ " AND res.reservationStatus != :statusCanceled AND res.reservationStatus != :statusFinished"
 				+ " AND ((res.dateFrom BETWEEN :from1 AND :to1) OR (res.dateTo BETWEEN :from2 AND :to2))";
 
-		Reservation reservation = null;
-		try {
-			reservation = (Reservation) session.createQuery(query).setParameter("property", property)
-				.setParameter("statusCanceled", ReservationStatus.CANCELLED)
-				.setParameter("statusFinished", ReservationStatus.FINISHED)
-				.setParameter("from1", from)
-				.setParameter("to1", to)
-				.setParameter("from2", from)
-				.setParameter("to2", to)
-				.setMaxResults(1)
-				.uniqueResult();
-		} finally {
-			session.close();
-		}
+		Reservation reservation = (Reservation) session.createQuery(query)
+			.setParameter("property", property)
+			.setParameter("statusCanceled", ReservationStatus.CANCELLED)
+			.setParameter("statusFinished", ReservationStatus.FINISHED)
+			.setParameter("from1", from)
+			.setParameter("to1", to)
+			.setParameter("from2", from)
+			.setParameter("to2", to)
+			.setMaxResults(1)
+			.uniqueResult();
 
 		return reservation;
 	}

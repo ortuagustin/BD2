@@ -5,6 +5,8 @@ import ar.edu.unlp.info.bd2.repositories.AirBdbRepository;
 
 import java.util.Date;
 
+import javax.transaction.Transactional;
+
 public class AirBdbServiceImpl implements AirBdbService {
 	private AirBdbRepository repository;
 
@@ -19,6 +21,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return el usuario creado
 	 */
 	@Override
+	@Transactional
 	public User createUser(String username, String name) {
 		User user = new User(username, name);
 		this.repository.save(user);
@@ -57,6 +60,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return la propiedad creada
 	 */
 	@Override
+	@Transactional
 	public Apartment createAparment(String name, String description, double price, int capacity, int rooms,
 			String cityName) {
 		Apartment apartment = new Apartment(name, description, price, capacity, cityName, rooms);
@@ -76,6 +80,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @return la habitación creada
 	 */
 	@Override
+	@Transactional
 	public PrivateRoom createRoom(String name, String description, double price, int capacity, int beds,
 			String cityName) {
 		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, cityName, beds);
@@ -113,6 +118,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @throws ReservationException si ya existe una reserva en ese rango de fechas
 	 */
 	@Override
+	@Transactional
 	public Reservation createReservation(long propertyId, long userId, Date from, Date to) throws ReservationException {
 		Reservation reservation = null;
 
@@ -148,6 +154,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @param reservationId id de la reserva a cancelar
 	 */
 	@Override
+	@Transactional
 	public void cancelReservation(Long reservationId) {
 		Reservation reservation = this.repository.getReservationById(reservationId);
 		reservation.setStatus(ReservationStatus.CANCELLED);
@@ -176,6 +183,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 * @param id
 	 */
 	@Override
+	@Transactional
 	public void finishReservation(Long id) {
 		Reservation reservation = this.getReservationById(id);
 
