@@ -4,7 +4,7 @@ import ar.edu.unlp.info.bd2.model.*;
 
 import java.util.Date;
 
-public interface AirBdbService {
+public interface AirBdbService extends AirBdbStatisticsService {
 
   /**
    * Crea un usuario

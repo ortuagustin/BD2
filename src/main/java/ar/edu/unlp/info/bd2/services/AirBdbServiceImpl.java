@@ -4,6 +4,7 @@ import ar.edu.unlp.info.bd2.model.*;
 import ar.edu.unlp.info.bd2.repositories.AirBdbRepository;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +65,8 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional
 	public Apartment createAparment(String name, String description, double price, int capacity, int rooms, String cityName) {
-		Apartment apartment = new Apartment(name, description, price, capacity, cityName, rooms);
+		City city = this.getCityByCityName(cityName);
+		Apartment apartment = new Apartment(name, description, price, capacity, city, rooms);
 		this.repository.save(apartment);
 
 		return apartment;
@@ -83,7 +85,8 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional
 	public PrivateRoom createRoom(String name, String description, double price, int capacity, int beds, String cityName) {
-		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, cityName, beds);
+		City city = this.getCityByCityName(cityName);
+		PrivateRoom privateRoom = new PrivateRoom(name, description, price, capacity, city, beds);
 		this.repository.save(privateRoom);
 
 		return privateRoom;
@@ -212,5 +215,69 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Transactional(readOnly = true)
 	public Reservation getReservationById(Long id) {
 		return this.repository.getReservationById(id);
+	}
+
+	@Override
+	public List<Property> getAllPropertiesReservedByUser(String userEmail) {
+		return null;
+	}
+
+	@Override
+	public List<User> getUsersSpendingMoreThan(double amount) {
+		return null;
+	}
+
+	@Override
+	public List<Object[]> getApartmentTop3Ranking() {
+		return null;
+	}
+
+	@Override
+	public List<User> getUsersThatReservedMoreThan1PropertyDuringASpecificYear(int year) {
+		return null;
+	}
+
+	@Override
+	public List<Property> getPropertiesThatHaveBeenReservedByMoreThanOneUserWithCapacityMoreThan(int capacity) {
+		return null;
+	}
+
+	@Override
+	public List<Reservation> getReservationsInCitiesForUser(String username, String... cities) {
+		return null;
+	}
+
+	@Override
+	public List<City> getCitiesThatHaveReservationsBetween(Date from, Date to) {
+		return null;
+	}
+
+	@Override
+	public List<User> getUsersThatReservedOnlyInCities(String... cities) {
+		return null;
+	}
+
+	@Override
+	public Reservation getMostExpensivePrivateRoomReservation() {
+		return null;
+	}
+
+	@Override
+	public List<String> getHotmailUsersWithAllTheirReservationsFinished() {
+		return null;
+	}
+
+	@Override
+	public Double getTotalRevenueForFinishedReservationsDuringYear(int year) {
+		return null;
+	}
+
+	@Override
+	public List<User> getMatchingUsersThatOnlyHaveReservationsInCities(String usernamePart, String... cities) {
+		return null;
+	}
+
+	private City getCityByCityName(String cityName) {
+		return this.repository.getOrCreateCityByCityName(cityName);
 	}
 }

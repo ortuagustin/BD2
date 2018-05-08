@@ -127,4 +127,21 @@ public class AirBdbRepository {
 
 		return reservation;
 	}
+
+	/**
+	 * Obtiene desde la DB la ciudad con el nombre correspondiente.
+	 * En caso de que no exista la crea
+	 * @param cityName Nombre de la ciudad a buscar/crear
+	 */
+	public City getOrCreateCityByCityName(String cityName) {
+		Session sess = this.sessionFactory.getCurrentSession();
+
+		City res = (City) sess.createCriteria(City.class).add(Restrictions.eq("name", cityName)).uniqueResult();
+		if (res == null) {
+			// Si no existe al creo
+			res = new City(cityName);
+			this.save(res);
+		}
+		return res;
+	}
 }

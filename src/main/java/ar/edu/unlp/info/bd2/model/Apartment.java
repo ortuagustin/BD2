@@ -8,8 +8,8 @@ import javax.persistence.Table;
 public class Apartment extends Property {
 	private Integer rooms;
 
-	public Apartment(String name, String description, Double price, Integer capacity, String cityName, Integer rooms) {
-		super(name, description, price, capacity, cityName);
+	public Apartment(String name, String description, Double price, Integer capacity, City city, Integer rooms) {
+		super(name, description, price, capacity, city);
 		this.rooms = rooms;
 	}
 
