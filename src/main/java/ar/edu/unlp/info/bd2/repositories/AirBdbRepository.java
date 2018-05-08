@@ -1,8 +1,10 @@
 package ar.edu.unlp.info.bd2.repositories;
 
 import ar.edu.unlp.info.bd2.model.*;
+import javassist.bytecode.Descriptor.Iterator;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -143,5 +145,42 @@ public class AirBdbRepository {
 			this.save(res);
 		}
 		return res;
+	}
+
+	/**
+	 * Devuelve el usuario que coincida con el mail
+	 * pasado por parametro
+	 * @param userMail Mail criterio a buscar
+	 */
+	public User getUserByMail(String userEmail) {
+		Session sess = this.sessionFactory.getCurrentSession();
+		return (User) sess.createCriteria(User.class).add(Restrictions.eq("email", userEmail)).uniqueResult();
+	}
+
+	/**
+	 * Obtiene de la DB las propiedades que han sido reservadas por
+	 * el usuario pasado por parametro
+	 * @param user Usuario a buscar
+	 * @return Lista de Properties
+	 */
+	public List<Property> getAllPropertiesReservedByUser(User user) {
+		Session session = this.sessionFactory.getCurrentSession();
+		String query = "SELECT property FROM Reservation res WHERE res.user = :user";
+		return (List<Property>) session.createQuery(query).setParameter("user", user).list();
+	}
+
+	/**
+	 * Devuelve los 3 departamentos mejor ranqueados
+	 * @return Lista con un arreglo de objetos como se describe en el 
+	 * javadoc de la interfaz
+	 */
+	public List<Object[]> getApartmentTop3Ranking() {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "SELECT ap, AVG(res.rating.points) FROM Apartment ap"
+		+ "INNER JOIN Reservation res"
+		+ "ORDER BY AVG(res.rating.points) DESC";
+
+		return session.createQuery(query).setMaxResults(3).list();
 	}
 }

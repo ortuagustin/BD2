@@ -17,8 +17,7 @@ import javax.persistence.Table;
 public class User {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name;
-  private String username;
+  private String name, username, email;
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
   private Set<Reservation> reservations = new HashSet<Reservation>();
 
@@ -26,10 +25,11 @@ public class User {
     super();
   }
 
-  public User(String username, String name) {
+  public User(String username, String name, String email) {
     this();
     this.username = username;
     this.name = name;
+    this.email = email;
   }
 
   /**
@@ -62,6 +62,10 @@ public class User {
    */
   public Set<Reservation> getReservations() {
     return this.reservations;
+  }
+
+  public String getEmail() {
+    return this.email;
   }
 
   @Override

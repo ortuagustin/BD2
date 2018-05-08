@@ -24,7 +24,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional
 	public User createUser(String username, String name) {
-		User user = new User(username, name);
+		User user = new User(username, name, name); // En principio el nombre de usuario es el mail
 		this.repository.save(user);
 
 		return user;
@@ -219,7 +219,8 @@ public class AirBdbServiceImpl implements AirBdbService {
 
 	@Override
 	public List<Property> getAllPropertiesReservedByUser(String userEmail) {
-		return null;
+		User user = this.repository.getUserByMail(userEmail);
+		return this.repository.getAllPropertiesReservedByUser(user);
 	}
 
 	@Override
@@ -229,7 +230,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 
 	@Override
 	public List<Object[]> getApartmentTop3Ranking() {
-		return null;
+		return this.repository.getApartmentTop3Ranking();
 	}
 
 	@Override
