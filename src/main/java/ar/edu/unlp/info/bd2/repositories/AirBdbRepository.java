@@ -1,7 +1,6 @@
 package ar.edu.unlp.info.bd2.repositories;
 
 import ar.edu.unlp.info.bd2.model.*;
-import javassist.bytecode.Descriptor.Iterator;
 
 import java.util.Date;
 import java.util.List;
@@ -148,16 +147,6 @@ public class AirBdbRepository {
 			this.save(res);
 		}
 		return res;
-	}
-
-	/**
-	 * Devuelve el usuario que coincida con el mail
-	 * pasado por parametro
-	 * @param userMail Mail criterio a buscar
-	 */
-	public User getUserByMail(String userEmail) {
-		Session sess = this.sessionFactory.getCurrentSession();
-		return (User) sess.createCriteria(User.class).add(Restrictions.eq("email", userEmail)).uniqueResult();
 	}
 
 	/**

@@ -17,19 +17,18 @@ import javax.persistence.Table;
 public class User {
   @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name, username, email;
+  private String name, username;
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
   private Set<Reservation> reservations = new HashSet<Reservation>();
 
   protected User() {
     super();
   }
-
-  public User(String username, String name, String email) {
+  
+  public User(String username, String name) {
     this();
     this.username = username;
     this.name = name;
-    this.email = email;
   }
 
   /**
@@ -62,10 +61,6 @@ public class User {
    */
   public Set<Reservation> getReservations() {
     return this.reservations;
-  }
-
-  public String getEmail() {
-    return this.email;
   }
 
   @Override
