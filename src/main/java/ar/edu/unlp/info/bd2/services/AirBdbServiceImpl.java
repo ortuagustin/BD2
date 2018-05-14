@@ -239,7 +239,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> getUsersThatReservedMoreThan1PropertyDuringASpecificYear(int year) {
-		return null;
+		return this.repository.getUsersThatReservedMoreThan1PropertyDuringASpecificYear(year);
 	}
 
 	@Override

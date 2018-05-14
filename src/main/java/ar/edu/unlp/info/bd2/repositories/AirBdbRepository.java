@@ -190,4 +190,15 @@ public class AirBdbRepository {
 									.setParameter("amount", amount)
 									.list();
 	}
+
+	public List<User> getUsersThatReservedMoreThan1PropertyDuringASpecificYear(int year) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "SELECT DISTINCT user FROM Reservation WHERE year(dateFrom) = :year GROUP BY user_id HAVING count(user_id) > 1";
+
+		return (List<User>) session.createQuery(query)
+									.setParameter("year", year)
+									.list();
+
+	}
 }
