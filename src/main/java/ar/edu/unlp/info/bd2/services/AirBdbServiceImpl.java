@@ -218,62 +218,74 @@ public class AirBdbServiceImpl implements AirBdbService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Property> getAllPropertiesReservedByUser(String userEmail) {
 		User user = this.repository.getUserByUsername(userEmail);
 		return this.repository.getAllPropertiesReservedByUser(user);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getUsersSpendingMoreThan(double amount) {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Object[]> getApartmentTop3Ranking() {
 		return this.repository.getApartmentTop3Ranking();
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getUsersThatReservedMoreThan1PropertyDuringASpecificYear(int year) {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Property> getPropertiesThatHaveBeenReservedByMoreThanOneUserWithCapacityMoreThan(int capacity) {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<Reservation> getReservationsInCitiesForUser(String username, String... cities) {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<City> getCitiesThatHaveReservationsBetween(Date from, Date to) {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getUsersThatReservedOnlyInCities(String... cities) {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Reservation getMostExpensivePrivateRoomReservation() {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<String> getHotmailUsersWithAllTheirReservationsFinished() {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Double getTotalRevenueForFinishedReservationsDuringYear(int year) {
 		return null;
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<User> getMatchingUsersThatOnlyHaveReservationsInCities(String usernamePart, String... cities) {
 		return null;
 	}
