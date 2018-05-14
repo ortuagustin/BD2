@@ -227,7 +227,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> getUsersSpendingMoreThan(double amount) {
-		return null;
+		return this.repository.getUsersSpendingMoreThan(amount);
 	}
 
 	@Override

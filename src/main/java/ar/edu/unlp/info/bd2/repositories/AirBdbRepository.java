@@ -163,7 +163,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Devuelve los 3 departamentos mejor ranqueados
-	 * @return Lista con un arreglo de objetos como se describe en el 
+	 * @return Lista con un arreglo de objetos como se describe en el
 	 * javadoc de la interfaz
 	 */
 	public List<Object[]> getApartmentTop3Ranking() {
@@ -174,5 +174,20 @@ public class AirBdbRepository {
 		+ "ORDER BY AVG(res.rating.points) DESC";
 
 		return session.createQuery(query).setMaxResults(3).list();
+	}
+
+  /**
+   * Obtiene todos los usuarios que han gastado más de <code>amount</code> en reservas en la plataforma
+   * @param amount
+   * @return Una lista de usuarios que satisfagan la condición
+   */
+	public List<User> getUsersSpendingMoreThan(double amount) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "SELECT DISTINCT user FROM Reservation WHERE price >= :amount";
+
+		return (List<User>) session.createQuery(query)
+									.setParameter("amount", amount)
+									.list();
 	}
 }
