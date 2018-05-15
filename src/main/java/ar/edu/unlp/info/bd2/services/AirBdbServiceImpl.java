@@ -257,7 +257,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<City> getCitiesThatHaveReservationsBetween(Date from, Date to) {
-		return null;
+		return this.repository.getCitiesThatHaveReservationsBetween(from, to);
 	}
 
 	@Override

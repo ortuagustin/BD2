@@ -201,4 +201,23 @@ public class AirBdbRepository {
 									.list();
 
 	}
+
+  /**
+   * Obtiene las ciudades que han tenido reservas entre las fechas <code>from</code> y <code>to</code>
+   * @param from
+   * @param to
+   * @return Las ciudades que satisfagan la condición
+   */
+	public List<City> getCitiesThatHaveReservationsBetween(Date from, Date to) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "SELECT DISTINCT res.property.city FROM Reservation res WHERE res.dateTo BETWEEN :from AND :to";
+		// tambien funca asi
+		// String query = "SELECT res.property.city FROM Reservation res WHERE res.dateTo BETWEEN :from AND :to GROUP BY res.property.city";
+
+		return (List<City>) session.createQuery(query)
+									.setParameter("from", from)
+									.setParameter("to", to)
+									.list();
+	}
 }
