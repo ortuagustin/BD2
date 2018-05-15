@@ -220,4 +220,21 @@ public class AirBdbRepository {
 									.setParameter("to", to)
 									.list();
 	}
+
+  /**
+   * Obtiene las reservas del usuario con username <code>username</code> en las ciudades <code>cities</code>
+   * @return Las ciudades que satisfagan la condición
+   */
+  public List<Reservation> getReservationsInCitiesForUser(String username, String... cities)  {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "FROM Reservation res " +
+									 "WHERE res.user.username = :username " +
+									 "AND res.property.city.name IN (:cities)";
+
+		return (List<Reservation>) session.createQuery(query)
+									.setParameter("username", username)
+									.setParameterList("cities", cities)
+									.list();
+	}
 }

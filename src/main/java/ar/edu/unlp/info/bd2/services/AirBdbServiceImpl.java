@@ -251,7 +251,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<Reservation> getReservationsInCitiesForUser(String username, String... cities) {
-		return null;
+		return this.repository.getReservationsInCitiesForUser(username, cities);
 	}
 
 	@Override
