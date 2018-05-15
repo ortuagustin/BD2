@@ -29,8 +29,6 @@ import java.util.stream.Collectors;
 @Rollback(true)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AirBdbStatisticsServiceTestCase {
-
-
   @Autowired
   DBInitializer initializer;
 

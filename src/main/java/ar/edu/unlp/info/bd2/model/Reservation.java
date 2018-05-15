@@ -30,6 +30,7 @@ public class Reservation {
   private Date dateFrom, dateTo;
   // lo defino como reservationStatus porque "status" es palabra reservada
   private ReservationStatus reservationStatus;
+  private Double price;
 
   public Reservation(Property property, User user, Date from, Date to) {
     this();
@@ -38,6 +39,7 @@ public class Reservation {
     this.dateFrom = from;
     this.dateTo = to;
     this.reservationStatus = ReservationStatus.TO_CONFIRM;
+    this.price = this.getRentedNights() * this.property.getPrice();
   }
 
   public Reservation() {
@@ -48,7 +50,7 @@ public class Reservation {
   * @return el precio por la reserva
   */
   public Double getPrice() {
-    return this.getRentedNights() * property.getPrice();
+    return this.price;
   }
 
   /**

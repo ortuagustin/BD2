@@ -163,7 +163,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Devuelve los 3 departamentos mejor ranqueados
-	 * @return Lista con un arreglo de objetos como se describe en el 
+	 * @return Lista con un arreglo de objetos como se describe en el
 	 * javadoc de la interfaz
 	 */
 	public List<Object[]> getApartmentTop3Ranking() {
@@ -176,5 +176,67 @@ public class AirBdbRepository {
 		+ " ORDER BY AVG(res.rating.points) DESC";
 
 		return session.createQuery(query).setMaxResults(3).list();
+	}
+
+  /**
+   * Obtiene todos los usuarios que han gastado más de <code>amount</code> en reservas en la plataforma
+   * @param amount
+   * @return Una lista de usuarios que satisfagan la condición
+   */
+	public List<User> getUsersSpendingMoreThan(double amount) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "SELECT DISTINCT user FROM Reservation WHERE price >= :amount";
+
+		return (List<User>) session.createQuery(query)
+									.setParameter("amount", amount)
+									.list();
+	}
+
+	public List<User> getUsersThatReservedMoreThan1PropertyDuringASpecificYear(int year) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "SELECT DISTINCT user FROM Reservation WHERE year(dateFrom) = :year GROUP BY user_id HAVING count(user_id) > 1";
+
+		return (List<User>) session.createQuery(query)
+									.setParameter("year", year)
+									.list();
+
+	}
+
+  /**
+   * Obtiene las ciudades que han tenido reservas entre las fechas <code>from</code> y <code>to</code>
+   * @param from
+   * @param to
+   * @return Las ciudades que satisfagan la condición
+   */
+	public List<City> getCitiesThatHaveReservationsBetween(Date from, Date to) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "SELECT DISTINCT res.property.city FROM Reservation res WHERE res.dateTo BETWEEN :from AND :to";
+		// tambien funca asi
+		// String query = "SELECT res.property.city FROM Reservation res WHERE res.dateTo BETWEEN :from AND :to GROUP BY res.property.city";
+
+		return (List<City>) session.createQuery(query)
+									.setParameter("from", from)
+									.setParameter("to", to)
+									.list();
+	}
+
+  /**
+   * Obtiene las reservas del usuario con username <code>username</code> en las ciudades <code>cities</code>
+   * @return Las ciudades que satisfagan la condición
+   */
+  public List<Reservation> getReservationsInCitiesForUser(String username, String... cities)  {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "FROM Reservation res " +
+									 "WHERE res.user.username = :username " +
+									 "AND res.property.city.name IN (:cities)";
+
+		return (List<Reservation>) session.createQuery(query)
+									.setParameter("username", username)
+									.setParameterList("cities", cities)
+									.list();
 	}
 }
