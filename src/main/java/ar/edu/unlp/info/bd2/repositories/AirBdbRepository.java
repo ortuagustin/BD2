@@ -169,9 +169,11 @@ public class AirBdbRepository {
 	public List<Object[]> getApartmentTop3Ranking() {
 		Session session = this.sessionFactory.getCurrentSession();
 
-		String query = "SELECT ap, AVG(res.rating.points) FROM Apartment ap"
-		+ "INNER JOIN Reservation res"
-		+ "ORDER BY AVG(res.rating.points) DESC";
+		String query = "SELECT ap, AVG(res.rating.points) FROM Reservation res"
+		+ " INNER JOIN res.property ap"
+		+ " WHERE res.property.class = Apartment"
+		+ " GROUP BY res.property"
+		+ " ORDER BY AVG(res.rating.points) DESC";
 
 		return session.createQuery(query).setMaxResults(3).list();
 	}
