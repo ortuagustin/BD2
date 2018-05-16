@@ -41,3 +41,6 @@ private
 #database
 #pom.xml
 .sts4-cache/*
+
+# VS Code
+.vscode
