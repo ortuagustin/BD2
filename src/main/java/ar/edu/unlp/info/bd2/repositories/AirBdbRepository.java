@@ -261,4 +261,23 @@ public class AirBdbRepository {
 			.setParameter("username", username)
 			.setParameterList("cities", cities).list();
 	}
+
+	/**
+	 * Obtiene el importe total facturado por la plataforma en concepto 
+	 * de todas aquellas reservas que han sido finalizadas (es decir que 
+	 * no han sido canceladas ni están en espera de confirmación) durante 
+	 * un año (year) específico
+	 * 
+	 * @param year año específico de la consulta
+	 * @return Importe total facturado en el año indicado por las reservas finalizadas
+	 */
+	public double getTotalRevenueForFinishedReservationsDuringYear(int year) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String select = "SELECT SUM(price) FROM Reservation";
+		String where = " WHERE year(dateTo) = :year AND status = 'FINISHED'";
+		String query = select + " " + where;
+
+		return (double) session.createQuery(query).setParameter("year", year).uniqueResult();
+	}
 }
