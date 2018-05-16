@@ -12,6 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@SuppressWarnings("unchecked") // it is know that HQL have unchecked cast from query to list
 @Transactional
 public class AirBdbRepository {
 	@Autowired
