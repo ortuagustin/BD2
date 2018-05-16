@@ -3,7 +3,9 @@ package ar.edu.unlp.info.bd2.services;
 import ar.edu.unlp.info.bd2.model.*;
 import ar.edu.unlp.info.bd2.repositories.AirBdbRepository;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -279,7 +281,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<String> getHotmailUsersWithAllTheirReservationsFinished() {
-		return null;
+		return this.repository.getHotmailUsersWithAllTheirReservationsFinished();
 	}
 
 	@Override

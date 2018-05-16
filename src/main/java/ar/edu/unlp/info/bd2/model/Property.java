@@ -13,7 +13,8 @@ import javax.persistence.GenerationType;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "PROPERTY_TYPE")
 public abstract class Property {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id 
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name, description;
   @ManyToOne
