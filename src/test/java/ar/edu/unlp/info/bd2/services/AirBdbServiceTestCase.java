@@ -24,12 +24,11 @@ import java.util.Date;
 @Transactional
 @Rollback(true)
 public class AirBdbServiceTestCase {
-
   @Autowired
   AirBdbService service;
 
   @Test
-  public void testCreateUser() throws RepeatedUsernameException{
+  public void testCreateUser() throws RepeatedUsernameException {
     boolean exceptionThrown = false;
 
     this.service.createUser("user@email.com", "user");
@@ -37,10 +36,12 @@ public class AirBdbServiceTestCase {
     Assert.assertNotNull(user);
     Assert.assertEquals("user@email.com", user.getUsername());
 
-    try {this.service.createUser("user@email.com", "user");}
-    catch (RepeatedUsernameException e){
+    try {
+      this.service.createUser("user@email.com", "user");
+    } catch (RepeatedUsernameException e) {
       exceptionThrown = true;
     }
+
     if (!exceptionThrown) {
       Assert.fail("Creating more than one user with the same username should not be allowed.");
     }
