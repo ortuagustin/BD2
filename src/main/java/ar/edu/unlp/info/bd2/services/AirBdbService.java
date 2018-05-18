@@ -1,8 +1,10 @@
 package ar.edu.unlp.info.bd2.services;
 
 import ar.edu.unlp.info.bd2.model.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 public interface AirBdbService extends AirBdbStatisticsService {
 
@@ -12,7 +14,7 @@ public interface AirBdbService extends AirBdbStatisticsService {
    * @param name nombre real del usuario
    * @return el usuario creado
    */
-  User createUser(String username, String name);
+  User createUser(String username, String name) throws RepeatedUsernameException;
 
   /**
    * Obtiene un usuario por su username (email)

@@ -12,6 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@SuppressWarnings("unchecked") // it is know that HQL have unchecked cast from query to list
 @Transactional
 public class AirBdbRepository {
 	@Autowired
@@ -270,5 +271,45 @@ public class AirBdbRepository {
 		return (List<Reservation>) session.createQuery(query)
 			.setParameter("username", username)
 			.setParameterList("cities", cities).list();
+	}
+
+	/**
+	 * Obtiene el importe total facturado por la plataforma en concepto 
+	 * de todas aquellas reservas que han sido finalizadas (es decir que 
+	 * no han sido canceladas ni están en espera de confirmación) durante 
+	 * un año (year) específico
+	 * 
+	 * @param year año específico de la consulta
+	 * @return Importe total facturado en el año indicado por las reservas finalizadas
+	 */
+	public double getTotalRevenueForFinishedReservationsDuringYear(int year) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String select = "SELECT SUM(price) FROM Reservation";
+		String where = "WHERE year(dateTo) = :year AND status = 'FINISHED'";
+		String query = select + " " + where;
+
+		return (double) session.createQuery(query).setParameter("year", year).uniqueResult();
+	}
+
+	
+
+	/**
+	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades 
+	 * cuyos nombres son listados en cities
+	 * 
+	 * @param cities lista de ciudades indicadas
+	 * @return Conjunto de usuarios que satisfaga la condicion
+	 */
+	public List<User> getUsersThatReservedOnlyInCities(String... cities) {
+		Session session = this.sessionFactory.getCurrentSession();
+	
+		// Esto es un doble not exist de aca a la china
+
+		String select = "SELECT DISTINCT res.user FROM Reservation res";
+		String where = "WHERE res.property.city.name IN (:cities) AND NOT IN...";
+		String query = select + " " + where;
+
+		return (List<User>) session.createQuery(query).setParameterList("cities", cities).list();
 	}
 }

@@ -25,7 +25,11 @@ public class AirBdbServiceImpl implements AirBdbService {
 	 */
 	@Override
 	@Transactional
-	public User createUser(String username, String name) {
+	public User createUser(String username, String name) throws RepeatedUsernameException {
+		if (this.getUserByUsername(username) != null) {
+			throw new RepeatedUsernameException();
+		}
+
 		User user = new User(username, name);
 		this.repository.save(user);
 

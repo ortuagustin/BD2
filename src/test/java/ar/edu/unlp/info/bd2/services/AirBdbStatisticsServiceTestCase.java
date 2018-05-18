@@ -116,7 +116,7 @@ public class AirBdbStatisticsServiceTestCase {
     List<String> users = this.service.getHotmailUsersWithAllTheirReservationsFinished();
     this.assertListEquality(
       users,
-      Arrays.asList("commodi@hotmail.com", "nihil@hotmail.com", "porro@hotmail.com", "enim@hotmail.com", "voluptatem@hotmail.com"));
+      Arrays.asList("commodi@hotmail.com", "nihil@hotmail.com", "porro@hotmail.com", "enim@hotmail.com", "voluptatem@hotmail.com", "nihiles@hotmail.com"));
   }
 
   @Test
