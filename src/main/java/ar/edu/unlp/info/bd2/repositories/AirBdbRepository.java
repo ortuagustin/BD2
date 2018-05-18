@@ -317,7 +317,7 @@ public class AirBdbRepository {
 	/**
 	 * Obtiene la reserva de habitación privada (PrivateRoom) más cara de toda la plataforma
 	 * 
-	 * @return Conjunto de usuarios que satisfaga la condicion
+	 * @return Conjunto de reservas que satisfaga la condicion
 	 */
 	public Reservation getMostExpensivePrivateRoomReservation() {
 		Session session = this.sessionFactory.getCurrentSession();
@@ -329,6 +329,24 @@ public class AirBdbRepository {
 		return (Reservation) session.createQuery(query).setMaxResults(1).uniqueResult();
 	}
 
+	/**
+	 * Obtiene todas las propiedades con una capacidad mayor a capacity que
+	 * han sido reservadas por más de un usuario en la plataforma
+	 * 
+	 * @param capacity
+	 * @return Conjunto de propiedades que satisfaga la condicion
+	 */
+	public List<Property> getPropertiesThatHaveBeenReservedByMoreThanOneUserWithCapacityMoreThan(int capacity) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "FROM Property prop"
+					+ " WHERE prop.capacity > :capacity "
+					+ " AND 1 < (SELECT COUNT(res.property) FROM Reservation res WHERE prop = res.property)";
+
+		return (List<Property>) session.createQuery(query).setParameter("capacity", capacity).list();
+	}
+
+	/**
 	/** NO ES LLAMADO DESDE LOS TESTS
 	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades 
 	 * cuyos nombres son listados en cities
