@@ -263,9 +263,15 @@ public class AirBdbRepository {
 	public List<User> getMatchingUsersThatOnlyHaveReservationsInCities(String usernamePart, String... cities) {
 		Session session = this.sessionFactory.getCurrentSession();
 
-		String query = "";
+		String query = "SELECT DISTINCT(res.user) FROM Reservation res" // Dame el usuario
+		+ " WHERE res.user.username LIKE :usernameIn" // Que contenga el string pasado por parametro
+		+ " AND NOT EXISTS(FROM Reservation res2" // Y que no exista una reserva
+			+ " WHERE res2.property.city.name NOT IN (:cities)" // Donde el nombre no este en la lista
+			+ " AND res.user = res2.user)"; // Teniendo en cuenta el usuario filtrado
 
 		return session.createQuery(query)
+			.setParameter("usernameIn", "%" + usernamePart + "%")
+			.setParameterList("cities", cities)
 			.list();
 	}
 
@@ -307,7 +313,7 @@ public class AirBdbRepository {
 
 	
 
-	/**
+	/** NO ES LLAMADO DESDE LOS TESTS
 	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades 
 	 * cuyos nombres son listados en cities
 	 * 
@@ -316,13 +322,12 @@ public class AirBdbRepository {
 	 */
 	public List<User> getUsersThatReservedOnlyInCities(String... cities) {
 		Session session = this.sessionFactory.getCurrentSession();
-	
-		// Esto es un doble not exist de aca a la china
 
-		String select = "SELECT DISTINCT res.user FROM Reservation res";
-		String where = "WHERE res.property.city.name IN (:cities) AND NOT IN...";
-		String query = select + " " + where;
+		String query = "SELECT res.user, COUNT(res.user) FROM Reservation res"
+				+ " WHERE res.property.city.name IN (:cities)"
+				+ " GROUP BY res.user" + " HAVING COUNT(res.user) = :citiesSize";
 
-		return (List<User>) session.createQuery(query).setParameterList("cities", cities).list();
+		return session.createQuery(query)
+				.setParameterList("cities", cities).setParameter("citiesSize", (long) cities.length).list();
 	}
 }

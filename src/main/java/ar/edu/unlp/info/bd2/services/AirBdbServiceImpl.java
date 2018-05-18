@@ -293,7 +293,14 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<User> getMatchingUsersThatOnlyHaveReservationsInCities(String usernamePart, String... cities) {
-		return null;
+		List<User> lu = this.repository.getMatchingUsersThatOnlyHaveReservationsInCities(usernamePart, cities);
+		System.out.println("ACA!");
+		System.out.println(lu.size());
+		Iterator<User> it = lu.iterator();
+		while(it.hasNext()) {
+			System.out.println(it.next().getUsername());
+		}
+		return lu;
 	}
 
 	private City getCityByCityName(String cityName) {
