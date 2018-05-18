@@ -287,7 +287,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public Double getTotalRevenueForFinishedReservationsDuringYear(int year) {
-		return null;
+		return this.repository.getTotalRevenueForFinishedReservationsDuringYear(year);
 	}
 
 	@Override

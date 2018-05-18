@@ -304,11 +304,14 @@ public class AirBdbRepository {
 	public double getTotalRevenueForFinishedReservationsDuringYear(int year) {
 		Session session = this.sessionFactory.getCurrentSession();
 
-		String select = "SELECT SUM(price) FROM Reservation";
-		String where = "WHERE year(dateTo) = :year AND status = 'FINISHED'";
-		String query = select + " " + where;
+		String query = "SELECT SUM(res.price) FROM Reservation res"
+			+ " WHERE year(res.dateTo) = :year AND res.reservationStatus = :statusFinished";
 
-		return (double) session.createQuery(query).setParameter("year", year).uniqueResult();
+		return (double) session.createQuery(query)
+			.setParameter("year", year)
+			.setParameter("statusFinished", ReservationStatus.FINISHED)
+			.setMaxResults(1)
+			.uniqueResult();
 	}
 
 	/**
