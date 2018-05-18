@@ -254,6 +254,22 @@ public class AirBdbRepository {
 	}
 
 	/**
+	 * Devuelve una lista de usuarios que hayan reservado sólo en el conjunto de ciudades
+	 * cuyos nombres son descriptos en cities y cuyo username contenga usernamePart 
+	 * @param usernamePart
+	 * @param cities
+	 * @return Las ciudades que satisfagan la condición
+	 */
+	public List<User> getMatchingUsersThatOnlyHaveReservationsInCities(String usernamePart, String... cities) {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "";
+
+		return session.createQuery(query)
+			.list();
+	}
+
+	/**
 	 * Obtiene las reservas del usuario con username username en las
 	 * ciudades 
 	 * @return Las ciudades que satisfagan la condición
