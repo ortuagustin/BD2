@@ -326,7 +326,6 @@ public class AirBdbRepository {
 		return (Reservation) session.createQuery(query).setMaxResults(1).uniqueResult();
 	}
 
-<<<<<<< HEAD
 	/**
 	 * Obtiene todas las propiedades con una capacidad mayor a capacity que
 	 * han sido reservadas por más de un usuario en la plataforma
@@ -345,9 +344,7 @@ public class AirBdbRepository {
 	}
 
 	/**
-=======
 	/** NO ES LLAMADO DESDE LOS TESTS
->>>>>>> 548c09a57506f93876b3dcb5854056286444702f
 	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades 
 	 * cuyos nombres son listados en cities
 	 * 
