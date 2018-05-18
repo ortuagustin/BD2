@@ -239,10 +239,10 @@ public class AirBdbRepository {
 		String query = "SELECT DISTINCT(res.user.username) FROM Reservation res"
 			+ " WHERE res.user.username LIKE :email"
 			+ " AND NOT EXISTS(FROM Reservation res3 WHERE (res3.reservationStatus = :statusCancelled"
-			+ " OR res3.reservationStatus = :statusConfirmed"
-			+ " OR res3.reservationStatus = :statusToConfirm)"
-			+ " AND NOT res3.reservationStatus = :statusFinished" // Doble negacion
-			+ " AND res3.user = res.user)"; 
+				+ " OR res3.reservationStatus = :statusConfirmed"
+				+ " OR res3.reservationStatus = :statusToConfirm)"
+				+ " AND NOT res3.reservationStatus = :statusFinished" // Doble negacion
+				+ " AND res3.user = res.user)"; 
 
 		return session.createQuery(query)
 			.setParameter("email", "%@hotmail.com")
