@@ -275,7 +275,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public Reservation getMostExpensivePrivateRoomReservation() {
-		return null;
+		return this.repository.getMostExpensivePrivateRoomReservation();
 	}
 
 	@Override

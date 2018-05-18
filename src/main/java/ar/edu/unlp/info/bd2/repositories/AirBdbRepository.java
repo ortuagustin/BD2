@@ -305,7 +305,15 @@ public class AirBdbRepository {
 		return (double) session.createQuery(query).setParameter("year", year).uniqueResult();
 	}
 
-	
+	public Reservation getMostExpensivePrivateRoomReservation() {
+		Session session = this.sessionFactory.getCurrentSession();
+
+		String query = "FROM Reservation res"
+					+ " WHERE res.property.class = PrivateRoom"
+					+ " ORDER BY res.property.price DESC";
+
+		return (Reservation) session.createQuery(query).setMaxResults(1).uniqueResult();
+	}
 
 	/**
 	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades 
