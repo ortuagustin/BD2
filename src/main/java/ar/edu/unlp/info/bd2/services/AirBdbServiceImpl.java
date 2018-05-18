@@ -281,15 +281,7 @@ public class AirBdbServiceImpl implements AirBdbService {
 	@Override
 	@Transactional(readOnly = true)
 	public List<String> getHotmailUsersWithAllTheirReservationsFinished() {
-		List<String> l = this.repository.getHotmailUsersWithAllTheirReservationsFinished();
-		
-		Iterator<String> it = l.iterator();
-		System.out.println("ACAAA");
-		System.out.println(l.size());
-		while(it.hasNext()) {
-			System.out.println(it.next());
-		}
-		return l;
+		return this.repository.getHotmailUsersWithAllTheirReservationsFinished();
 	}
 
 	@Override

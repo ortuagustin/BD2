@@ -20,15 +20,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { AppConfig.class, HibernateConfiguration.class }, loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = { AppConfig.class, HibernateConfiguration.class}, loader = AnnotationConfigContextLoader.class)
 @Transactional
 @Rollback(true)
 public class AirBdbServiceTestCase {
+
   @Autowired
   AirBdbService service;
 
   @Test
-  public void testCreateUser() throws RepeatedUsernameException {
+  public void testCreateUser() throws RepeatedUsernameException{
     boolean exceptionThrown = false;
 
     this.service.createUser("user@email.com", "user");
@@ -36,12 +37,10 @@ public class AirBdbServiceTestCase {
     Assert.assertNotNull(user);
     Assert.assertEquals("user@email.com", user.getUsername());
 
-    try {
-      this.service.createUser("user@email.com", "user");
-    } catch (RepeatedUsernameException e) {
+    try {this.service.createUser("user@email.com", "user");}
+    catch (RepeatedUsernameException e){
       exceptionThrown = true;
     }
-
     if (!exceptionThrown) {
       Assert.fail("Creating more than one user with the same username should not be allowed.");
     }
@@ -154,6 +153,13 @@ public class AirBdbServiceTestCase {
     Assert.assertNotNull(rating);
     Assert.assertEquals(1, rating.getPoints());
     Assert.assertEquals("Very dirty and uncomfortable", rating.getComment());
+  }
+
+  @Test
+  public void testCapacityInApartments() throws Exception {
+    Property property = this.service.createAparment("Apartment Capacity Test", "Cozy Apartment close to City Center", 45.0, 3,2, "La Plata" );
+    Property propertyFromDb = this.service.getPropertyByName("Apartment Capacity Test");
+    Assert.assertEquals((Integer) 3, propertyFromDb.getCapacity());
   }
 
 }

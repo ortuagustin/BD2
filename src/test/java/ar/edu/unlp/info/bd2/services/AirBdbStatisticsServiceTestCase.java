@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
 @Rollback(true)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AirBdbStatisticsServiceTestCase {
+
+
   @Autowired
   DBInitializer initializer;
 
@@ -85,7 +87,7 @@ public class AirBdbStatisticsServiceTestCase {
     List<Property> properties = this.service.getPropertiesThatHaveBeenReservedByMoreThanOneUserWithCapacityMoreThan(4);
     this.assertListEquality(
       properties.stream().map(property -> property.getName()).collect(Collectors.toList()),
-      Arrays.asList("Ipsum nesc", "Ut aperiam, ", "Vel qui fugiat", "Esse q", "Iure eos eos", "Ea consectetur", "Veritatis sit", "Eum quia quam n"));
+      Arrays.asList("Adipi", "Ut aperiam, ", "Esse q", "Iure eos eos", "Veritatis sit", "Eum quia quam n"));
   }
 
   @Test
