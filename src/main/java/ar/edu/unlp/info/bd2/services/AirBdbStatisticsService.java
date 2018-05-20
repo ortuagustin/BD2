@@ -7,7 +7,6 @@ import ar.edu.unlp.info.bd2.model.User;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface AirBdbStatisticsService {
 
