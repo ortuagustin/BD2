@@ -2,6 +2,29 @@
 
 # Parte 1
 
+## 1. Cuáles de los siguientes conceptos de RDBMS existen en MongoDB? En caso de no existir, ¿hay alguna alternativa? ¿Cuál es?
+* Base de Datos --> existe
+* Tabla/Relación --> No existe, la alternativa son colecciones, que agrupan documentos
+* Fila/Tupla --> No existe, se utilizan documentos, que son objetos JSON
+* Columna --> No existe, la alternativa son los atributos/campos de los documentos JSON
+
+## 2. MongoDB tiene soporte para transacciones, pero no es igual que el de los RDBMS. ¿Cuál es el alcance de una transacción en MongoDB?
+
+El alcance es el docuemnto, incluso aunque se modifiquen documentos embebidos
+
+## 3. Para acelerar las consultas, MongoDB tiene soporte para índices. ¿Qué tipos de índices soporta?
+
+* Single field
+* Compound index
+* Multikey index
+* Geospatial index
+* Text index
+* Hashed index
+
+## 4. ¿Existen claves foráneas en MongoDB?
+
+No existen, se tienen referencias a otros documentos
+
 # Parte 2
 
 ## 5. Cree una nueva base de datos llamada airbdb, y una colección llamada apartments. En esa colección inserte un nuevo documento (un departamento) con los siguientes atributos:
