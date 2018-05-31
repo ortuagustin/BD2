@@ -329,6 +329,21 @@ Por lo tanto, existe un indice para el campo `_id`. Este indice es creado automa
                 foreignField: "apartmentName",
                 as: "reservations"
             }
+        }
+    ])
+```
+
+## 16. Usando la colección del punto anterior, obtenga el promedio de precio pagado por reserva (precio completo, no dividir por la cantidad de noches) de cada departamento.
+
+```bash
+    db.apartmentsNearLondon.aggregate([
+        {
+            $lookup: {
+                from: "reservations",
+                localField: "name",
+                foreignField: "apartmentName",
+                as: "reservations"
+            }
         },
         {
             $avg: {
@@ -337,5 +352,3 @@ Por lo tanto, existe un indice para el campo `_id`. Este indice es creado automa
         }
     ])
 ```
-
-## 16. Usando la colección del punto anterior, obtenga el promedio de precio pagado por reserva (precio completo, no dividir por la cantidad de noches) de cada departamento.
