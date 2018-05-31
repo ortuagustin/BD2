@@ -346,9 +346,16 @@ Por lo tanto, existe un indice para el campo `_id`. Este indice es creado automa
             }
         },
         {
-            $avg: {
-
+            $match: { "reservations": { $ne: [] } }
+        },
+        {
+            $project : {
+                _id: 0,
+                name: 1,
+                from: 1,
+                to: 1,
+                averagePrice: { $avg: "$reservations.amount" }
             }
-        }
-    ])
+      }
+    ]).pretty()
 ```
