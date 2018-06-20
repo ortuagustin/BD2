@@ -25,7 +25,6 @@ import java.util.List;
 @ContextConfiguration(classes = { MongoConfiguration.class, ApplicationConfiguration.class }, loader = AnnotationConfigContextLoader.class)
 @SpringBootTest
 public class AirBdbServiceUnitTest {
-
   @Autowired
   AirBdbService service;
 
@@ -44,10 +43,12 @@ public class AirBdbServiceUnitTest {
     Assert.assertEquals("user@email.com", user.getUsername());
     Assert.assertNotNull(user.getId());
 
-    try {this.service.createUser("user@email.com", "user");}
-    catch (RepeatedUsernameException e){
+    try {
+      this.service.createUser("user@email.com", "user");
+    } catch (RepeatedUsernameException e) {
       exceptionThrown = true;
     }
+
     if (!exceptionThrown) {
       Assert.fail("Creating more than one user with the same username should not be allowed.");
     }
@@ -92,6 +93,7 @@ public class AirBdbServiceUnitTest {
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     this.service.createReservation(property.getId(), user.getId(), sdf.parse("20/10/2018"), sdf.parse("23/10/2018"), ReservationStatus.CONFIRMATION_PENDING);
     this.service.createReservation(property.getId(), user.getId(), sdf.parse("25/10/2018"), sdf.parse("28/10/2018"), ReservationStatus.CONFIRMATION_PENDING);
+
     try {
       this.service.createReservation(property.getId(), user.getId(), sdf.parse("22/10/2018"), sdf.parse("24/10/2018"), ReservationStatus.CONFIRMATION_PENDING);
     } catch (ReservationException e) {
@@ -107,6 +109,7 @@ public class AirBdbServiceUnitTest {
     } catch (ReservationException e) {
       return;
     }
+
     Assert.fail("Last reservation should not be allowed since property is already reserved in those dates");
   }
 
@@ -125,7 +128,6 @@ public class AirBdbServiceUnitTest {
     Assert.assertEquals("Mar de Ajo", cities.get(0).getName());
     Assert.assertEquals("Mar de las Pampas", cities.get(1).getName());
     Assert.assertEquals("Mar del Plata", cities.get(2).getName());
-
   }
 
   @Test
@@ -150,17 +152,17 @@ public class AirBdbServiceUnitTest {
 
     List<ReservationCount> reservationCountByStatus = this.service.getReservationCountByStatus();
     Assert.assertEquals(3, reservationCountByStatus.size());
+
     Assert.assertTrue(
             reservationCountByStatus.stream()
                     .anyMatch(rc -> rc.getCount().equals(2L) && rc.getStatus().equals(ReservationStatus.CONFIRMED)));
+
     Assert.assertTrue(
             reservationCountByStatus.stream()
                     .anyMatch(rc -> rc.getCount().equals(3L) && rc.getStatus().equals(ReservationStatus.FINISHED)));
+
     Assert.assertTrue(
             reservationCountByStatus.stream()
                     .anyMatch(rc -> rc.getCount().equals(1L) && rc.getStatus().equals(ReservationStatus.CONFIRMATION_PENDING)));
-
-
   }
-
 }
