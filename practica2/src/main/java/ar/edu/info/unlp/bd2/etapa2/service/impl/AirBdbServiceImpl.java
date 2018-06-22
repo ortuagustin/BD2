@@ -54,8 +54,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @param cityName    nombre de la ciudad en que la propiedad estará localizada
    * @return la propiedad creada
    */
-  public Property createProperty(String name, String description, double price, int capacity, int rooms,
-      String cityName) {
+  public Property createProperty(String name, String description, double price, int capacity, int rooms, String cityName) {
     return null;
   }
 
@@ -77,8 +76,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @return la reserva creada
    * @throws ReservationException si ya existe una reserva en ese rango de fechas
    */
-  public Reservation createReservation(String propertyId, String userId, Date from, Date to,
-      ReservationStatus initialStatus) throws ReservationException {
+  public Reservation createReservation(String propertyId, String userId, Date from, Date to, ReservationStatus initialStatus) throws ReservationException {
     return null;
   }
 
