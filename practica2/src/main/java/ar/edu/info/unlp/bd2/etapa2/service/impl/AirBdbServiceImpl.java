@@ -5,6 +5,7 @@ import ar.edu.info.unlp.bd2.etapa2.repository.AirBdbRepository;
 import ar.edu.info.unlp.bd2.etapa2.service.AirBdbService;
 import ar.edu.info.unlp.bd2.etapa2.utils.ReservationCount;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,11 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @return el usuario creado
    */
   public User createUser(String username, String name) throws RepeatedUsernameException {
-    return null;
+    if (this.repository.findUserByUsername(username).isPresent()) {
+      throw new RepeatedUsernameException(MessageFormat.format("Username {0} already exists", username));
+    }
+
+    return this.repository.createUser(username, name);
   }
 
   /**
@@ -34,7 +39,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @return el usuario que coincida o null si no hay ninguna coincidencia
    */
   public User getUserByUsername(String email) {
-    return null;
+    return this.repository.findUserByUsername(email).orElse(null);
   }
 
   /**

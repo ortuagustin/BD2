@@ -15,7 +15,7 @@ public class City {
   }
 
   private City() {
-
+    super();
   }
 
   /**
