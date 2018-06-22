@@ -4,24 +4,17 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import ar.edu.info.unlp.bd2.etapa2.config.MongoConfiguration;
 import ar.edu.info.unlp.bd2.etapa2.model.*;
 
 public class AirBdbRepository {
   @Autowired
   private CityRepository cityRepository;
+  @Autowired
   private MongoTemplate mongoTemplate;
-
-  public AirBdbRepository() {
-    ApplicationContext ctx = new AnnotationConfigApplicationContext(MongoConfiguration.class);
-    this.mongoTemplate = (MongoTemplate) ctx.getBean("mongoTemplate");
-  }
 
   /**
    * Devuelve la ciudad dado el nombre
