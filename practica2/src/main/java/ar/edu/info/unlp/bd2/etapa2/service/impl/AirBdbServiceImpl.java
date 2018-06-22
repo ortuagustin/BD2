@@ -17,13 +17,6 @@ public class AirBdbServiceImpl implements AirBdbService {
   }
 
   /**
-   * @return the repository
-   */
-  public AirBdbRepository getRepository() {
-    return repository;
-  }
-
-  /**
    * Crea un usuario
    *
    * @param username nombre de usuario en el sistema (email)
@@ -65,7 +58,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * Limpia la base de datos por completo, borrando todas las colecciones
    */
   public void clearDb() {
-
+    this.repository.clearDb();
   }
 
   /**
@@ -123,7 +116,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @return Las ciudades que coincidan con el criterio
    */
   public List<City> getCitiesMatching(String content) {
-    return null;
+    return this.repository.getCitiesMatching(content);
   }
 
   /**
@@ -132,7 +125,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @param name
    */
   public City registerCity(String name) {
-    return null;
+    return this.repository.findCityByName(name).orElseGet(() -> this.repository.createCity(name));
   }
 
   /**
