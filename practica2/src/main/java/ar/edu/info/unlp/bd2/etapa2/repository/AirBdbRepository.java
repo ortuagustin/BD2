@@ -1,8 +1,10 @@
 package ar.edu.info.unlp.bd2.etapa2.repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -52,17 +54,6 @@ public class AirBdbRepository {
   }
 
   /**
-   * Devuelve la ciudad dado el nombre
-   *
-   * @param name
-   *
-   * @return Optional<City>
-   */
-  public Optional<User> findUserByUsername(String username) {
-    return Optional.ofNullable(this.mongoTemplate.findOne(new Query(Criteria.where("username").is(username)), User.class));
-  }
-
-  /**
    * Crea un nuevo usuario con el username y nombre indicados y lo persiste en la BD
    *
    * @param username
@@ -75,6 +66,81 @@ public class AirBdbRepository {
     this.mongoTemplate.insert(user);
 
     return user;
+  }
+
+  /**
+   * Obtiene un usuario por su id
+   *
+   * @param id el id del usuario
+   *
+   * @return Optional<User>
+   */
+  public Optional<User> findUserById(String userId) {
+    User user = this.mongoTemplate.findOne(new Query(Criteria.where("_id").is(userId)), User.class);
+    this.loadReservationsForUser(user);
+
+    return Optional.ofNullable(user);
+  }
+
+  /**
+   * Obtiene un usuario por su username
+   *
+   * @param name
+   *
+   * @return Optional<User>
+   */
+  public Optional<User> findUserByUsername(String username) {
+    Optional<User> user =
+      Optional.ofNullable(this.mongoTemplate.findOne(new Query(Criteria.where("username").is(username)), User.class));
+
+    if (user.isPresent()) {
+      this.loadReservationsForUser(user.get());
+    }
+
+    return user;
+  }
+
+  private void loadReservationsForUser(User user) {
+    this.getReservationsForUser(user.getId()).forEach((reservation) ->
+      user.addReservation(reservation)
+    );
+  }
+
+  public Property createProperty(String name, String description, Double price, Integer capacity, Integer rooms, City city) {
+    Property property = new Property(name, description, price, capacity, rooms, city);
+    this.mongoTemplate.insert(property);
+
+    return property;
+  }
+
+  public List<Reservation> getReservationsForUser(String userId) {
+    return this.mongoTemplate.find(new Query(Criteria.where("user.$id").is(new ObjectId(userId))), Reservation.class);
+  }
+
+  public List<Reservation> getReservationsForProperty(String propertyId) {
+    return this.mongoTemplate.find(new Query(Criteria.where("property.$id").is(new ObjectId(propertyId))), Reservation.class);
+  }
+
+  /**
+   * Crea una nueva reserva para un usuario dado en una propiedad puntual
+   *
+   * @param property        la propiedad en la cual se quiere crear la reserva
+   * @param user            usuario para el cual se quiere crear la reserva
+   * @param from            fecha desde la cual comienza la reserva
+   * @param to              fecha en la cual termina la reserva
+   * @param initialStatus   estado inicial de la reserva
+   *
+   * @return Reservation
+   */
+  public Reservation createReservation(Property property, User user, Date from, Date to, ReservationStatus initialStatus) {
+    Reservation reservation = new Reservation(property, user, from, to, initialStatus);
+    this.mongoTemplate.insert(reservation);
+
+    return reservation;
+  }
+
+  public Property findPropertyById(String propertyId) {
+    return this.mongoTemplate.findOne(new Query(Criteria.where("_id").is(propertyId)), Property.class);
   }
 
   /**

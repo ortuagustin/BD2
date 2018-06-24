@@ -1,8 +1,10 @@
 package ar.edu.info.unlp.bd2.etapa2.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -11,43 +13,48 @@ public class User {
   private String id;
   private String username;
   private String name;
+  @DBRef
+  private List<Reservation> reservations;
 
   public User(String username, String name) {
     super();
     this.username = username;
     this.name = name;
+    this.reservations = new ArrayList<Reservation>();
   }
 
-  private User() {
-    super();
+  /**
+   * Adds the reservation to the internal List of this user's reservations
+   */
+  public void addReservation(Reservation reservation) {
+    this.reservations.add(reservation);
   }
 
   /**
    * @return the Id
    */
   public String getId() {
-    return this.id;
+    return id;
   }
 
   /**
    * @return the Username
    */
   public String getUsername() {
-    return this.username;
+    return username;
   }
 
   /**
    * @return the Name
    */
   public String getName() {
-    return this.name;
+    return name;
   }
 
   /**
    * @return the Reservations
    */
-  // TODO implementar
   public List<Reservation> getReservations() {
-    return null;
+    return reservations;
   }
 }

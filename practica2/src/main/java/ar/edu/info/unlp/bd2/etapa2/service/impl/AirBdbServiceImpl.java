@@ -55,7 +55,9 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @return la propiedad creada
    */
   public Property createProperty(String name, String description, double price, int capacity, int rooms, String cityName) {
-    return null;
+    City city = this.findOrCreateCity(cityName);
+
+    return this.repository.createProperty(name, description, price, capacity, rooms, city);
   }
 
   /**
@@ -77,7 +79,10 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @throws ReservationException si ya existe una reserva en ese rango de fechas
    */
   public Reservation createReservation(String propertyId, String userId, Date from, Date to, ReservationStatus initialStatus) throws ReservationException {
-    return null;
+    Property property = this.getPropertyById(propertyId);
+    User user = this.getUserById(userId);
+
+    return this.repository.createReservation(property, user, from, to, initialStatus);
   }
 
   /**
@@ -87,7 +92,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @return el usuario que coincida o null si no hay ninguna coincidencia
    */
   public User getUserById(String id) {
-    return null;
+    return this.repository.findUserById(id).orElse(null);
   }
 
   /**
@@ -98,7 +103,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    *         existir ninguna
    */
   public City getCityByName(String name) {
-    return null;
+    return this.repository.findCityByName(name).orElse(null);
   }
 
   /**
@@ -108,7 +113,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @return las reservas que cumplan con el criterio
    */
   public List<Reservation> getReservationsForProperty(String propertyId) {
-    return null;
+    return this.repository.getReservationsForProperty(propertyId);
   }
 
   /**
@@ -128,7 +133,7 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @param name
    */
   public City registerCity(String name) {
-    return this.repository.findCityByName(name).orElseGet(() -> this.repository.createCity(name));
+    return this.findOrCreateCity(name);
   }
 
   /**
@@ -148,5 +153,23 @@ public class AirBdbServiceImpl implements AirBdbService {
    */
   public List<ReservationCount> getReservationCountByStatus() {
     return null;
+  }
+
+  /**
+   * Crea una ciudad con nombre <code>name</code> si no está registrada aún
+   *
+   * @param name
+   */
+  private City findOrCreateCity(String name) {
+	  return this.repository.findCityByName(name).orElseGet(() -> this.repository.createCity(name));
+  }
+
+  /**
+   * Obtiene una propiedad por su Id
+   *
+   * @param propertyId
+   */
+  private Property getPropertyById(String propertyId) {
+    return this.repository.findPropertyById(propertyId);
   }
 }

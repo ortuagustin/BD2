@@ -14,10 +14,6 @@ public class City {
     this.name = name;
   }
 
-  private City() {
-    super();
-  }
-
   /**
    * @return the Id
    */
