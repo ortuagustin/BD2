@@ -1,9 +1,11 @@
 package ar.edu.info.unlp.bd2.etapa2.utils;
 
+import org.springframework.data.annotation.Id;
+
 import ar.edu.info.unlp.bd2.etapa2.model.ReservationStatus;
 
 public class ReservationCount {
-
+  @Id
   private ReservationStatus status;
   private Long count;
 

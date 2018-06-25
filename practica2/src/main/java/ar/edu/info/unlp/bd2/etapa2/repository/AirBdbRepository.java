@@ -7,10 +7,13 @@ import java.util.Optional;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.TypedAggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import ar.edu.info.unlp.bd2.etapa2.model.*;
+import ar.edu.info.unlp.bd2.etapa2.utils.ReservationCount;
 
 public class AirBdbRepository {
   @Autowired
@@ -40,6 +43,15 @@ public class AirBdbRepository {
     City city = new City(name);
 
     return this.cityRepository.save(city);
+  }
+
+  /**
+   * Lista todas las ciudades registradas en la aplicación
+   *
+   * @return List<City>
+   */
+  public List<City> getAllCities() {
+    return this.cityRepository.findAll();
   }
 
   /**
@@ -113,6 +125,10 @@ public class AirBdbRepository {
     return property;
   }
 
+  public Property findPropertyById(String propertyId) {
+    return this.mongoTemplate.findOne(new Query(Criteria.where("_id").is(propertyId)), Property.class);
+  }
+
   public List<Reservation> getReservationsForUser(String userId) {
     return this.mongoTemplate.find(new Query(Criteria.where("user.$id").is(new ObjectId(userId))), Reservation.class);
   }
@@ -147,8 +163,17 @@ public class AirBdbRepository {
     return reservation;
   }
 
-  public Property findPropertyById(String propertyId) {
-    return this.mongoTemplate.findOne(new Query(Criteria.where("_id").is(propertyId)), Property.class);
+  /**
+   * Obtiene las cantidad de reservas que hay en el sistema en cada estado en
+   * particular
+   *
+   * @return List<ReservationCount>
+   */
+  public List<ReservationCount> getReservationCountByStatus() {
+    TypedAggregation<Reservation> aggregation =
+      Aggregation.newAggregation(Reservation.class, Aggregation.group("status").count().as("count"));
+
+    return this.mongoTemplate.aggregate(aggregation, ReservationCount.class).getMappedResults();
   }
 
   /**

@@ -147,20 +147,20 @@ public class AirBdbServiceImpl implements AirBdbService {
   /**
    * Lista todas las ciudades registradas en la aplicación
    *
-   * @return
+   * @return List<City>
    */
   public List<City> getAllCities() {
-    return null;
+    return this.repository.getAllCities();
   }
 
   /**
    * Obtiene las cantidad de reservas que hay en el sistema en cada estado en
    * particular
    *
-   * @return
+   * @return List<ReservationCount>
    */
   public List<ReservationCount> getReservationCountByStatus() {
-    return null;
+    return this.repository.getReservationCountByStatus();
   }
 
   /**
