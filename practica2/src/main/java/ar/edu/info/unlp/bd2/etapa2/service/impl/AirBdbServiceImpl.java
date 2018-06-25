@@ -79,13 +79,21 @@ public class AirBdbServiceImpl implements AirBdbService {
    * @throws ReservationException si ya existe una reserva en ese rango de fechas
    */
   public Reservation createReservation(String propertyId, String userId, Date from, Date to, ReservationStatus initialStatus) throws ReservationException {
+    if (! this.isPropertyAvaiable(propertyId, from, to)) {
+      throw new ReservationException("Property is already reserved in those dates");
+    }
+
     Property property = this.getPropertyById(propertyId);
     User user = this.getUserById(userId);
 
     return this.repository.createReservation(property, user, from, to, initialStatus);
   }
 
-  /**
+  private Boolean isPropertyAvaiable(String propertyId, Date from, Date to) {
+    return this.repository.getReservationsForProperty(propertyId, from, to).isEmpty();
+  }
+
+/**
    * Obtiene un usuario por su id
    *
    * @param id el id del usuario

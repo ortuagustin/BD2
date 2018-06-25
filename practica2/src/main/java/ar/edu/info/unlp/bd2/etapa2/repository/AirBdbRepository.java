@@ -121,6 +121,14 @@ public class AirBdbRepository {
     return this.mongoTemplate.find(new Query(Criteria.where("property.$id").is(new ObjectId(propertyId))), Reservation.class);
   }
 
+  public List<Reservation> getReservationsForProperty(String propertyId, Date from, Date to) {
+    Criteria query = Criteria.where("property.$id").is(new ObjectId(propertyId))
+      .and("from").lte(to)
+      .and("to").gte(from);
+
+    return this.mongoTemplate.find(new Query(query), Reservation.class);
+  }
+
   /**
    * Crea una nueva reserva para un usuario dado en una propiedad puntual
    *
