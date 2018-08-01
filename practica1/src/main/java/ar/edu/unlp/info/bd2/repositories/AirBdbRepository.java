@@ -52,9 +52,13 @@ public class AirBdbRepository {
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
 	public Property getPropertyByName(String name) {
-		Session sess = this.sessionFactory.getCurrentSession();
+		Session session = this.sessionFactory.getCurrentSession();
 
-		return (Property) sess.createCriteria(Property.class).add(Restrictions.eq("name", name)).uniqueResult();
+		return (Property) session
+			.createQuery("FROM Property p WHERE p.name = :name")
+			.setParameter("name", name)
+			.setMaxResults(1)
+			.uniqueResult();
 	}
 
 	/**
