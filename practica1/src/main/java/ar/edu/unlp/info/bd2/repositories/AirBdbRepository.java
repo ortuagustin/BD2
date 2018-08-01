@@ -20,7 +20,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Persiste el objeto en la base de datos, contemplando el uso de transacciones
-	 * 
+	 *
 	 * @param object el objecto a persistir
 	 */
 	public <T> void save(T object) {
@@ -31,19 +31,23 @@ public class AirBdbRepository {
 
 	/**
 	 * Obtiene un usuario por su username (email)
-	 * 
+	 *
 	 * @param username nombre de usuario a buscar
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
 	public User getUserByUsername(String username) {
-		Session sess = this.sessionFactory.getCurrentSession();
+		Session session = this.sessionFactory.getCurrentSession();
 
-		return (User) sess.createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
+		return (User) session
+			.createQuery("FROM User u WHERE u.username = :username")
+			.setParameter("username", username)
+			.setMaxResults(1)
+			.uniqueResult();
 	}
 
 	/**
 	 * Obtiene una propiedad (habitación y departamento) por su nombre
-	 * 
+	 *
 	 * @param name nombre de la propiedad a obtener
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
@@ -55,7 +59,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Obtiene un usuario por su id
-	 * 
+	 *
 	 * @param id el id del usuario
 	 * @return el usuario que coincida o null si no hay ninguna coincidencia
 	 */
@@ -65,7 +69,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Obtiene una propiedad (habitación y departamento) por su id
-	 * 
+	 *
 	 * @param id el id de la propiedad a obtener
 	 * @return la propiedad que coincida o null si no hay ninguna coincidencia
 	 */
@@ -75,7 +79,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Obtiene una reserva por su id
-	 * 
+	 *
 	 * @param id id de la reserva que se busca
 	 * @return la reserva que coincida con ese id o <code>null</code> en caso
 	 *         contrario
@@ -87,7 +91,7 @@ public class AirBdbRepository {
 	/**
 	 * Metodo generico que elimina un objeto de cualquier clase Los metodos publicos
 	 * invocan a este metodo casteando al tipo que corresponda
-	 * 
+	 *
 	 * @param object objeto que se desea borrar
 	 */
 	public <T> void remove(T obj) {
@@ -98,7 +102,7 @@ public class AirBdbRepository {
 	/**
 	 * Metodo generico que obtiene un objeto persistente de cualquier clase Los
 	 * metodos publicos invocan a este metodo casteando al tipo que corresponda
-	 * 
+	 *
 	 * @param id    id del objeto persistido
 	 * @param klass la clase del objeto que se desea buscar
 	 * @return el objeto persistido
@@ -113,7 +117,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Obtiene una reserva a partir de su property entre determinadas fechas
-	 * 
+	 *
 	 * @param property Property por la que se buscara la reserva
 	 * @param from     fecha de inicio de reserva que se buscara
 	 * @param to       fecha de fin de reserva que se buscara
@@ -138,7 +142,7 @@ public class AirBdbRepository {
 	/**
 	 * Obtiene desde la DB la ciudad con el nombre correspondiente. En caso de que
 	 * no exista la crea
-	 * 
+	 *
 	 * @param cityName Nombre de la ciudad a buscar/crear
 	 */
 	public City getOrCreateCityByCityName(String cityName) {
@@ -156,7 +160,7 @@ public class AirBdbRepository {
 	/**
 	 * Obtiene de la DB las propiedades que han sido reservadas por el usuario
 	 * pasado por parametro
-	 * 
+	 *
 	 * @param user Usuario a buscar
 	 * @return Lista de Properties
 	 */
@@ -168,7 +172,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Devuelve los 3 departamentos mejor ranqueados
-	 * 
+	 *
 	 * @return Lista con un arreglo de objetos como se describe en el javadoc de la
 	 *         interfaz
 	 */
@@ -186,7 +190,7 @@ public class AirBdbRepository {
 	/**
 	 * Obtiene todos los usuarios que han gastado más de <code>amount</code> en
 	 * reservas en la plataforma
-	 * 
+	 *
 	 * @param amount
 	 * @return Una lista de usuarios que satisfagan la condición
 	 */
@@ -211,7 +215,7 @@ public class AirBdbRepository {
 	/**
 	 * Obtiene las ciudades que han tenido reservas entre las fechas
 	 * <code>from</code> y <code>to</code>
-	 * 
+	 *
 	 * @param from
 	 * @param to
 	 * @return Las ciudades que satisfagan la condición
@@ -242,7 +246,7 @@ public class AirBdbRepository {
 				+ " OR res3.reservationStatus = :statusConfirmed"
 				+ " OR res3.reservationStatus = :statusToConfirm)"
 				+ " AND NOT res3.reservationStatus = :statusFinished" // Doble negacion
-				+ " AND res3.user = res.user)"; 
+				+ " AND res3.user = res.user)";
 
 		return session.createQuery(query)
 			.setParameter("email", "%@hotmail.com")
@@ -255,7 +259,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Devuelve una lista de usuarios que hayan reservado sólo en el conjunto de ciudades
-	 * cuyos nombres son descriptos en cities y cuyo username contenga usernamePart 
+	 * cuyos nombres son descriptos en cities y cuyo username contenga usernamePart
 	 * @param usernamePart
 	 * @param cities
 	 * @return Las ciudades que satisfagan la condición
@@ -277,7 +281,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Obtiene las reservas del usuario con username username en las
-	 * ciudades 
+	 * ciudades
 	 * @return Las ciudades que satisfagan la condición
 	 */
 	public List<Reservation> getReservationsInCitiesForUser(String username, String... cities) {
@@ -293,11 +297,11 @@ public class AirBdbRepository {
 	}
 
 	/**
-	 * Obtiene el importe total facturado por la plataforma en concepto 
-	 * de todas aquellas reservas que han sido finalizadas (es decir que 
-	 * no han sido canceladas ni están en espera de confirmación) durante 
+	 * Obtiene el importe total facturado por la plataforma en concepto
+	 * de todas aquellas reservas que han sido finalizadas (es decir que
+	 * no han sido canceladas ni están en espera de confirmación) durante
 	 * un año (year) específico
-	 * 
+	 *
 	 * @param year año específico de la consulta
 	 * @return Importe total facturado en el año indicado por las reservas finalizadas
 	 */
@@ -316,7 +320,7 @@ public class AirBdbRepository {
 
 	/**
 	 * Obtiene la reserva de habitación privada (PrivateRoom) más cara de toda la plataforma
-	 * 
+	 *
 	 * @return Conjunto de reservas que satisfaga la condicion
 	 */
 	public Reservation getMostExpensivePrivateRoomReservation() {
@@ -332,7 +336,7 @@ public class AirBdbRepository {
 	/**
 	 * Obtiene todas las propiedades con una capacidad mayor a capacity que
 	 * han sido reservadas por más de un usuario en la plataforma
-	 * 
+	 *
 	 * @param capacity
 	 * @return Conjunto de propiedades que satisfaga la condicion
 	 */
@@ -348,9 +352,9 @@ public class AirBdbRepository {
 
 	/**
 	/** NO ES LLAMADO DESDE LOS TESTS
-	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades 
+	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades
 	 * cuyos nombres son listados en cities
-	 * 
+	 *
 	 * @param cities lista de ciudades indicadas
 	 * @return Conjunto de usuarios que satisfaga la condicion
 	 */
