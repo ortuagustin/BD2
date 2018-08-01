@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("unchecked") // it is know that HQL have unchecked cast from query to list
@@ -150,15 +149,20 @@ public class AirBdbRepository {
 	 * @param cityName Nombre de la ciudad a buscar/crear
 	 */
 	public City getOrCreateCityByCityName(String cityName) {
-		Session sess = this.sessionFactory.getCurrentSession();
+		Session session = this.sessionFactory.getCurrentSession();
 
-		City res = (City) sess.createCriteria(City.class).add(Restrictions.eq("name", cityName)).uniqueResult();
-		if (res == null) {
-			// Si no existe al creo
-			res = new City(cityName);
-			this.save(res);
+		City city = (City) session
+			.createQuery("FROM City c WHERE c.name = :name")
+			.setParameter("name", cityName)
+			.setMaxResults(1)
+			.uniqueResult();
+
+		if (city == null) {
+			city = new City(cityName);
+			this.save(city);
 		}
-		return res;
+
+		return city;
 	}
 
 	/**
@@ -355,7 +359,6 @@ public class AirBdbRepository {
 	}
 
 	/**
-	/** NO ES LLAMADO DESDE LOS TESTS
 	 * Obtiene los usuarios que realizaron reservas sólo en todas las ciudades
 	 * cuyos nombres son listados en cities
 	 *
